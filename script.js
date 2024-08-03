@@ -2,7 +2,7 @@ let startPokemon = 0;
 let BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=50`;
 
 let singlePokemonsInfo = [];
-
+let allPokemonsArray = [];
 function init() {
   let contentRef = document.getElementById("content");
   let buttonRef = document.getElementById("load-more-btn");
@@ -40,7 +40,7 @@ async function usePromise() {
 async function fetchPokemons(url) {
   let response = await fetch(url);
   let pokemonAsJson = await response.json();
-  let allPokemonsArray = pokemonAsJson.results;
+  allPokemonsArray = pokemonAsJson.results;
 
   getAllPokemons(allPokemonsArray);
 }

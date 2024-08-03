@@ -76,3 +76,7 @@ d-none {
 .progress-bar {
   text-align: start;
 }
+
+.chain {
+  height: 60px;
+}
