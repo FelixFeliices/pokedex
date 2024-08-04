@@ -4,9 +4,10 @@
   height: 280px;
 }
 
-.card:hover {
+.pointer:hover {
   cursor: pointer;
 }
+
 .card-body {
   display: flex;
   flex-direction: column;

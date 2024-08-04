@@ -53,6 +53,10 @@ d-none {
 
 .down {
   height: 355px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #container {
@@ -78,5 +82,13 @@ d-none {
 }
 
 .chain {
-  height: 60px;
+  width: 80px;
+  height: 80px;
+}
+
+.arrow {
+  height: 40px;
+}
+.column {
+  flex-direction: column;
 }

@@ -1,6 +1,6 @@
 function renderPkmCard(pokemonIndex) {
   return `<div id="pokemon-card-${pokemonIndex}" onclick="openDetailInfo(event), displayChoosenPokemon(${pokemonIndex})" class="card shadow mb-5 rounded">
-                <div class="card-body">
+                <div class="card-body pointer">
                   <span class="name" id="id_name${pokemonIndex}"></span>
                   <img class="pokemonImg" id="pokemon-img${pokemonIndex}" src="" alt="Bild" />
                   <div class="pokemon-types-container">
