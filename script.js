@@ -3,15 +3,21 @@ let BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=5
 
 let singlePokemonsInfo = [];
 let allPokemonsArray = [];
+
 function init() {
   let contentRef = document.getElementById("content");
   let buttonRef = document.getElementById("load-more-btn");
 
   contentRef.innerHTML = "";
-  buttonRef.classList.toggle("d-none");
+  buttonRef.classList.remove("d-none");
 
-  usePromise();
+  if (singlePokemonsInfo.length === 0) {
+    usePromise();
+  } else {
+    displayAllPokemons(singlePokemonsInfo);
+  }
 }
+
 let promError = false;
 
 function getPromise() {
@@ -55,6 +61,18 @@ function getAllPokemons(allPokemonsArray) {
   }
 }
 
+function displayAllPokemons(pokemons) {
+  let contentRef = document.getElementById("content");
+  contentRef.innerHTML = "";
+
+  for (let i = 0; i < pokemons.length; i++) {
+    let pokemon = pokemons[i];
+    let pokemonIndex = singlePokemonsInfo.indexOf(pokemon);
+    createPokemonCard(pokemonIndex);
+    displayPokemonSingleInformations(pokemonIndex, pokemon);
+  }
+}
+
 function createPokemonCard(pokemonIndex) {
   let contentRef = document.getElementById("content");
 
@@ -63,7 +81,7 @@ function createPokemonCard(pokemonIndex) {
 
 function loadPokemons() {
   startPokemon = singlePokemonsInfo.length;
-  BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=100`;
+  BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=50`;
   usePromise();
 }
 

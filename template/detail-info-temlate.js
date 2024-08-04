@@ -24,7 +24,7 @@ function detailInfoTemplate(pokemonIndex, id) {
           >Stats</a
         >
         <a onclick="showEvolutionChain(${id})" href="#" class="btn btn-secondary">Evolution Chain</a>
-        <a href="#" class="btn btn-secondary">Erscheinungen</a>
+        <a onclick=" showAppearance(${pokemonIndex})"href="#" class="btn btn-secondary">Erscheinungen</a>
         <a href="#" class="btn btn-secondary">Attacks</a>
       </div>
       <div id="switch" class="form-check form-switch">

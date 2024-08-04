@@ -92,3 +92,13 @@ d-none {
 .column {
   flex-direction: column;
 }
+
+.appearance {
+  height: 100px;
+  width: 100px;
+}
+
+.wrap {
+  flex-wrap: wrap;
+  gap: 16px;
+}

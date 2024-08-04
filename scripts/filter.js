@@ -52,3 +52,15 @@ function showLoadMore() {
   let buttonRef = document.getElementById("load-more-btn");
   buttonRef.classList.remove("d-none");
 }
+
+function displayAllPokemons(pokemons) {
+  let contentRef = document.getElementById("content");
+  contentRef.innerHTML = "";
+
+  for (let i = 0; i < pokemons.length; i++) {
+    let pokemon = pokemons[i];
+    let pokemonIndex = singlePokemonsInfo.indexOf(pokemon);
+    createPokemonCard(pokemonIndex);
+    displayPokemonSingleInformations(pokemonIndex, pokemon);
+  }
+}
