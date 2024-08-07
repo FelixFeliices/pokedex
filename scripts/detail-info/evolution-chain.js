@@ -1,7 +1,7 @@
 async function showEvolutionChain(pokemonId) {
   const speciesData = await fetchPokemonSpecies(pokemonId);
   const evolutionChainData = await fetchEvolutionChain(speciesData.evolution_chain.url);
-
+  console.log("chain");
   clearContainer();
   createEvolutionContainer(pokemonId);
   displayEvolutionChain(evolutionChainData);
@@ -70,9 +70,9 @@ function displayEvolutionChain(evoChain) {
 }
 
 function displayBaseEvolution(evoChain) {
+  let firstLevelUp = evoChain.chain.evolves_to[0].evolution_details[0].min_level;
   let nameRef1 = document.getElementById("name-evo1");
   let firstLevelUpRef = document.getElementById("first-level-up");
-  let firstLevelUp = evoChain.chain.evolves_to[0].evolution_details[0].min_level;
 
   nameRef1.innerHTML = evoChain.chain.species.name.toUpperCase();
   firstLevelUpRef.innerHTML = "Lvl:" + firstLevelUp;

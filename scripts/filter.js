@@ -1,20 +1,28 @@
 function filterPkmName() {
   let inputRef = document.getElementById("input").value.toLowerCase();
-  let filteredPokemons = singlePokemonsInfo.filter((pokemon) => pokemon.name.toLowerCase().includes(inputRef));
-  displayFilteredPokemons(filteredPokemons);
-  $(".dropdown-menu").removeClass("show");
+  let filteredPokemons = fullPokedex.filter((pokemon) => pokemon.name.toLowerCase().includes(inputRef));
+  filterActive = true;
+  if (inputRef.length >= 3) {
+    displayFilteredPokemons(filteredPokemons);
+    $(".dropdown-menu").removeClass("show");
+  } else {
+    init();
+  }
 }
 
 function filterPkmType(parameter) {
   let typeRef = parameter.toLowerCase();
-  let filteredPokemons = singlePokemonsInfo.filter((pokemon) => {
+  let filteredPokemons = fullPokedex.filter((pokemon) => {
+    filterActive = true;
     for (let i = 0; i < pokemon.types.length; i++) {
       if (pokemon.types[i].type.name.toLowerCase().includes(typeRef)) {
         return true;
       }
     }
+
     return false;
   });
+
   displayFilteredPokemons(filteredPokemons);
   closeDropDown();
 }
@@ -28,7 +36,8 @@ function displayFilteredPokemons(pokemons) {
   } else {
     for (let i = 0; i < pokemons.length; i++) {
       let pokemon = pokemons[i];
-      let pokemonIndex = singlePokemonsInfo.indexOf(pokemon);
+      let pokemonIndex = fullPokedex.indexOf(pokemon);
+      console.log(pokemon, pokemonIndex);
       createPokemonCard(pokemonIndex);
       displayPokemonSingleInformations(pokemonIndex, pokemon);
       hideLoadMore();
@@ -51,16 +60,4 @@ function hideLoadMore() {
 function showLoadMore() {
   let buttonRef = document.getElementById("load-more-btn");
   buttonRef.classList.remove("d-none");
-}
-
-function displayAllPokemons(pokemons) {
-  let contentRef = document.getElementById("content");
-  contentRef.innerHTML = "";
-
-  for (let i = 0; i < pokemons.length; i++) {
-    let pokemon = pokemons[i];
-    let pokemonIndex = singlePokemonsInfo.indexOf(pokemon);
-    createPokemonCard(pokemonIndex);
-    displayPokemonSingleInformations(pokemonIndex, pokemon);
-  }
 }

@@ -1,41 +1,47 @@
+let promError = false;
 let startPokemon = 0;
-let BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=50`;
-
-let singlePokemonsInfo = [];
-let allPokemonsArray = [];
+let cyle = 0;
+let filterActive = false;
+let BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=20`;
+const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=1302`;
+let singlePokemonsInfo = []; //mit allen Infos
+let fullPokedex = []; // alle pokemos mit infos für filter funktion
 
 function init() {
-  let contentRef = document.getElementById("content");
-  let buttonRef = document.getElementById("load-more-btn");
-
-  contentRef.innerHTML = "";
-  buttonRef.classList.remove("d-none");
-
+  clearContent();
+  filterActive = false;
   if (singlePokemonsInfo.length === 0) {
-    usePromise();
+    usePromise(BASE_URL);
+    usePromise(FULL_POKEDEX_URL);
   } else {
     displayAllPokemons(singlePokemonsInfo);
   }
 }
 
-let promError = false;
+function clearContent() {
+  let contentRef = document.getElementById("content");
+  let buttonRef = document.getElementById("load-more-btn");
 
-function getPromise() {
+  contentRef.innerHTML = "";
+  buttonRef.classList.remove("d-none");
+}
+
+function getPromise(URL) {
   return new Promise((resolve, reject) => {
     displayLoadScreen();
     setTimeout(() => {
       if (promError) {
         reject();
       } else {
-        resolve(fetchPokemons(BASE_URL));
+        resolve(fetchPokemons(URL));
       }
     }, 2000);
   });
 }
 
-async function usePromise() {
+async function usePromise(URL) {
   try {
-    await getPromise();
+    await getPromise(URL);
   } catch (error) {
     console.log("error", error);
   } finally {
@@ -46,18 +52,31 @@ async function usePromise() {
 async function fetchPokemons(url) {
   let response = await fetch(url);
   let pokemonAsJson = await response.json();
-  allPokemonsArray = pokemonAsJson.results;
 
-  getAllPokemons(allPokemonsArray);
+  if (cyle == 0) {
+    let allPokemonsArray = pokemonAsJson.results;
+    cyle++;
+    getAllPokemons(allPokemonsArray);
+  } else if (cyle == 1) {
+    let fullPokedexArray = pokemonAsJson.results;
+    cyle++;
+    getAllPokemons(fullPokedexArray);
+  }
 }
 
-function getAllPokemons(allPokemonsArray) {
-  for (let pokemonIndex = 0; pokemonIndex < allPokemonsArray.length; pokemonIndex++) {
-    const pokemon = allPokemonsArray[pokemonIndex];
-    let pokemonSingelInformationURL = pokemon.url;
+function getAllPokemons(array) {
+  for (let pokemonIndex = 0; pokemonIndex < array.length; pokemonIndex++) {
+    const pokemon = array[pokemonIndex];
+    if (cyle == 1) {
+      let pokemonSingelInformationURL = pokemon.url;
+      createPokemonCard(startPokemon + pokemonIndex);
+      fetchSinglePokemon(pokemonSingelInformationURL, startPokemon + pokemonIndex);
+    } else if (cyle == 2) {
+      allPokemonInformationURl = pokemon.url;
 
-    createPokemonCard(startPokemon + pokemonIndex);
-    fetchSinglePokemon(pokemonSingelInformationURL, startPokemon + pokemonIndex);
+      // createPokemonCard(startPokemon + pokemonIndex);
+      fetchSinglePokemon(allPokemonInformationURl, startPokemon + pokemonIndex);
+    }
   }
 }
 
@@ -81,41 +100,67 @@ function createPokemonCard(pokemonIndex) {
 
 function loadPokemons() {
   startPokemon = singlePokemonsInfo.length;
-  BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=50`;
-  usePromise();
+  BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=150`;
+  usePromise(BASE_URL);
 }
 
-async function fetchSinglePokemon(pokemonSingelInformationURL, pokemonIndex) {
-  let responseSinglePokemon = await fetch(pokemonSingelInformationURL);
-  let pokemonSingleInformation = await responseSinglePokemon.json();
-  singlePokemonsInfo[pokemonIndex] = pokemonSingleInformation;
-  displayPokemonSingleInformations(pokemonIndex, pokemonSingleInformation);
-  showLoadMore();
+async function fetchSinglePokemon(urlToFetch, pokemonIndex) {
+  if (cyle == 1) {
+    let responseSinglePokemon = await fetch(urlToFetch);
+    let pokemonSingleInformation = await responseSinglePokemon.json();
+
+    singlePokemonsInfo[pokemonIndex] = pokemonSingleInformation;
+
+    displayPokemonSingleInformations(pokemonIndex, pokemonSingleInformation);
+    showLoadMore();
+  } else if (cyle === 2) {
+    let responseSinglePokemon = await fetch(urlToFetch);
+    let fullPokedexInfos = await responseSinglePokemon.json();
+
+    fullPokedex[pokemonIndex] = fullPokedexInfos;
+  }
 }
 
-function displayPokemonSingleInformations(pokemonIndex, pokemonSingleInformation) {
-  displayNameAndId(pokemonIndex, pokemonSingleInformation);
-  displayImg(pokemonIndex, pokemonSingleInformation);
-  displayType(pokemonIndex, pokemonSingleInformation);
-  updateBgColor(pokemonIndex, pokemonSingleInformation);
+function displayPokemonSingleInformations(pokemonIndex, choosenArray) {
+  displayNameAndId(pokemonIndex, choosenArray);
+  displayImg(pokemonIndex, choosenArray);
+  displayType(pokemonIndex, choosenArray);
+  updateBgColor(pokemonIndex, choosenArray);
 }
 
-function displayNameAndId(pokemonIndex, pokemonSingleInformation) {
+function displayNameAndId(pokemonIndex, choosenArray) {
   let id_nameRef = document.getElementById(`id_name${pokemonIndex}`);
-  let id = pokemonSingleInformation.id;
-  let name = pokemonSingleInformation.name;
+  let id = choosenArray.id;
+  let name = choosenArray.name;
 
   id_nameRef.innerHTML = `#${id} ${name.toUpperCase()}`;
 }
 
-function displayImg(pokemonIndex, pokemonSingleInformation) {
+function displayImg(pokemonIndex, choosenArray) {
   let pokemonImgRef = document.getElementById(`pokemon-img${pokemonIndex}`);
-  pokemonImgRef.src = pokemonSingleInformation.sprites.other.dream_world.front_default;
+  let img;
+  try {
+    img = choosenArray.sprites.other.dream_world.front_default;
+    if (!img) {
+      throw new Error("404");
+    }
+    pokemonImgRef.src = img;
+  } catch (error) {
+    try {
+      img = choosenArray.sprites.other.home.front_default;
+      if (!img) {
+        throw new Error("404");
+      }
+      pokemonImgRef.src = img;
+    } catch (error) {
+      pokemonImgRef.src = choosenArray.sprites.other.showdown.front_default;
+    }
+  }
 }
 
-function displayType(pokemonIndex, pokemonSingleInformation) {
-  for (let typeIndex = 0; typeIndex < pokemonSingleInformation.types.length; typeIndex++) {
-    const pokemonTypes = pokemonSingleInformation.types[typeIndex].type.name;
+function displayType(pokemonIndex, choosenArray) {
+  for (let typeIndex = 0; typeIndex < choosenArray.types.length; typeIndex++) {
+    const pokemonTypes = choosenArray.types[typeIndex].type.name;
 
     if (typeIndex === 0) {
       renderFirstTypeImg(pokemonIndex, pokemonTypes);
@@ -124,7 +169,7 @@ function displayType(pokemonIndex, pokemonSingleInformation) {
     }
   }
 
-  if (checkSecondTypeAvailable(pokemonSingleInformation)) {
+  if (checkSecondTypeAvailable(choosenArray)) {
     hideEmptyType(pokemonIndex);
   }
 }
@@ -133,8 +178,8 @@ function checkType(pokemonTypes) {
   return pokemonTypes === `${pokemonTypes}`;
 }
 
-function checkSecondTypeAvailable(pokemonSingleInformation) {
-  return pokemonSingleInformation.types.length <= 1;
+function checkSecondTypeAvailable(choosenArray) {
+  return choosenArray.types.length <= 1;
 }
 
 function renderFirstTypeImg(pokemonIndex, pokemonTypes) {
@@ -156,8 +201,8 @@ function hideEmptyType(pokemonIndex) {
   pokemonSecondImgTypeRef.classList.add("d-none");
 }
 
-function updateBgColor(pokemonIndex, pokemonSingleInformation) {
+function updateBgColor(pokemonIndex, choosenArray) {
   let cardRef = document.getElementById(`pokemon-card-${pokemonIndex}`);
-  let typeForBg = pokemonSingleInformation.types[0].type.name;
+  let typeForBg = choosenArray.types[0].type.name;
   cardRef.classList.add(`${typeForBg}`);
 }

@@ -31,37 +31,55 @@ function createAppearanceContainer() {
 }
 
 function getImages(pokemonIndex) {
-  let pokemon = singlePokemonsInfo[pokemonIndex].sprites;
+  if (!filterActive) {
+    let pokemon = singlePokemonsInfo[pokemonIndex].sprites;
 
-  displayDefaultImg(pokemon);
-  displayShinyImg(pokemon);
-  console.log(pokemon);
+    displayDefaultImg(pokemon);
+    displayShinyImg(pokemon);
+  } else if (filterActive) {
+    let pokemon = fullPokedex[pokemonIndex].sprites;
+
+    displayDefaultImg(pokemon);
+    displayShinyImg(pokemon);
+  }
 }
 
 function displayDefaultImg(pokemon) {
-  let front_default = pokemon.front_default;
-  let back_default = pokemon.back_default;
-  let homeDefault = pokemon.other.home.front_default;
-  let showdownFrontDefault = pokemon.other.showdown.front_default;
-  let showdownBackDefault = pokemon.other.showdown.back_default;
+  const elements = [
+    { id: "front_default", src: pokemon.front_default },
+    { id: "back_default", src: pokemon.back_default },
+    { id: "homeDefault", src: pokemon.other.home.front_default },
+    { id: "showdownFrontDefault", src: pokemon.other.showdown.front_default },
+    { id: "showdownBackDefault", src: pokemon.other.showdown.back_default },
+  ];
 
-  document.getElementById("front_default").src = front_default;
-  document.getElementById("back_default").src = back_default;
-  document.getElementById("homeDefault").src = homeDefault;
-  document.getElementById("showdownFrontDefault").src = showdownFrontDefault;
-  document.getElementById("showdownBackDefault").src = showdownBackDefault;
+  elements.forEach(({ id, src }) => {
+    const imgElement = document.getElementById(id);
+    if (src) {
+      imgElement.src = src;
+      imgElement.classList.remove("d-none");
+    } else {
+      imgElement.classList.add("d-none");
+    }
+  });
 }
 
 function displayShinyImg(pokemon) {
-  let fron_shiny = pokemon.front_shiny;
-  let back_shiny = pokemon.back_shiny;
-  let homeShiny = pokemon.other.home.front_shiny;
-  let showdownFrontShiny = pokemon.other.showdown.front_shiny;
-  let showdownBackShiny = pokemon.other.showdown.back_shiny;
+  const elements = [
+    { id: "front_shiny", src: pokemon.front_shiny },
+    { id: "back_shiny", src: pokemon.back_shiny },
+    { id: "homeShiny", src: pokemon.other.home.front_shiny },
+    { id: "showdownFrontShiny", src: pokemon.other.showdown.front_shiny },
+    { id: "showdownBackShiny", src: pokemon.other.showdown.back_shiny },
+  ];
 
-  document.getElementById("fron_shiny").src = fron_shiny;
-  document.getElementById("back_shiny").src = back_shiny;
-  document.getElementById("homeShiny").src = homeShiny;
-  document.getElementById("showdownFrontShiny").src = showdownFrontShiny;
-  document.getElementById("showdownBackShiny").src = showdownBackShiny;
+  elements.forEach(({ id, src }) => {
+    const imgElement = document.getElementById(id);
+    if (src) {
+      imgElement.src = src;
+      imgElement.classList.remove("d-none");
+    } else {
+      imgElement.classList.add("d-none");
+    }
+  });
 }
