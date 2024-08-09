@@ -99,6 +99,7 @@ function createPokemonCard(pokemonIndex) {
 }
 
 function loadPokemons() {
+  cyle = 0;
   startPokemon = singlePokemonsInfo.length;
   BASE_URL = `https://pokeapi.co/api/v2/pokemon?offset=${startPokemon}&limit=150`;
   usePromise(BASE_URL);
