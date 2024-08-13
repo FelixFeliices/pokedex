@@ -102,3 +102,9 @@ d-none {
   flex-wrap: wrap;
   gap: 16px;
 }
+
+#evo-container-first-evo {
+  max-width: 300px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
