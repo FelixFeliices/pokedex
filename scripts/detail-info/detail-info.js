@@ -37,7 +37,7 @@ function displayChoosenPokemon(pokemonIndex) {
 }
 function getSelectetPokemonWithoutFilter(pokemonIndex) {
   let overlayerRef = document.getElementById("overlayer");
-  let selectedPokemon = singlePokemonsInfo[pokemonIndex];
+  let selectedPokemon = chunkedPokedex[pokemonIndex];
   let id = selectedPokemon.id;
   overlayerRef.innerHTML = detailInfoTemplate(pokemonIndex, id);
   getPkmInfos(selectedPokemon);
@@ -90,11 +90,7 @@ function renderInfosInOvererlay(name, id, img, weight, height) {
 }
 
 function nextPkm(pokemonIndex) {
-  if (pokemonIndex >= singlePokemonsInfo.length) {
-    pokemonIndex = singlePokemonsInfo.length;
-  } else {
-    pokemonIndex++;
-  }
+  pokemonIndex++;
   displayChoosenPokemon(pokemonIndex);
   restoreCheckboxStatus();
 }

@@ -1,6 +1,6 @@
 function playCries(pokemonIndex) {
   if (cyle == 1) {
-    let selectedPokemon = singlePokemonsInfo[pokemonIndex];
+    let selectedPokemon = chunkedPokedex[pokemonIndex];
     audioURL = selectedPokemon.cries.legacy;
     const audio = new Audio(audioURL);
     audio.play();

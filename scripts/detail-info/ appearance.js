@@ -32,7 +32,7 @@ function createAppearanceContainer() {
 
 function getImages(pokemonIndex) {
   if (!filterActive) {
-    let pokemon = singlePokemonsInfo[pokemonIndex].sprites;
+    let pokemon = chunkedPokedex[pokemonIndex].sprites;
 
     displayDefaultImg(pokemon);
     displayShinyImg(pokemon);

@@ -16,7 +16,7 @@ function displayStatsTable(stat) {
 }
 
 function displayStatsDiagram(stats) {
-  const maxValue = 140;
+  const maxValue = 160;
   const points = calculatePoints(stats, maxValue);
   const polygon = document.getElementById("data-polygon");
   polygon.setAttribute("points", points);

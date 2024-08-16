@@ -31,11 +31,9 @@ async function getData(evolutionChainData) {
     possibleFirstEvoltions.push(possibleEvoltion);
   }
   if (possibleFirstEvoltions.length > 0) {
-    console.log(possibleFirstEvoltions.length);
     await getFirstEvolutionData();
 
     if (possibleSecondEvoltions.length > 0) {
-      console.log(possibleSecondEvoltions.length);
       await getSecondEvolutionData();
     }
   }
@@ -56,13 +54,14 @@ async function getFirstEvolutionData() {
     const evolves_to = overview.evolves_to;
     const URL_FOR_IMG = overview.species.url;
     const img = await getEvolutionImg(URL_FOR_IMG);
+    let levelUpRequerment = displayLevelUpRequirement(overview);
 
     for (let index = 0; index < evolves_to.length; index++) {
       let possibleEvoltion = evolves_to[index];
       possibleSecondEvoltions.push(possibleEvoltion);
     }
-
     displayFirstEvo(img, name);
+    displayArrow("first-arrow", evolutionTriggerName, levelUpRequerment);
   }
 }
 
@@ -75,11 +74,26 @@ async function getSecondEvolutionData() {
     const evolutionTriggerUrl = evolutionTrigger.url;
     const URL_FOR_IMG = overview.species.url;
     const img = await getEvolutionImg(URL_FOR_IMG);
+    let levelUpRequerment = displayLevelUpRequirement(overview);
 
     displaySecondEvo(img, name);
+    displayArrow("second-arrow", evolutionTriggerName, levelUpRequerment);
   }
 }
 
+function displayLevelUpRequirement(overview) {
+  let levelUpInfoOverview = overview.evolution_details[0];
+
+  if (levelUpInfoOverview.min_level !== null && levelUpInfoOverview.min_level !== undefined) {
+    let levelUpLevel = levelUpInfoOverview.min_level;
+    return levelUpLevel;
+  } else if (levelUpInfoOverview.item && levelUpInfoOverview.item.name) {
+    let levelUpItem = levelUpInfoOverview.item.name;
+    return levelUpItem;
+  } else {
+    return "n/A";
+  }
+}
 function clearContainer() {
   document.getElementById("container").innerHTML = "";
   document.getElementById("switch").classList.add("d-none");
@@ -101,8 +115,7 @@ async function getEvolutionImg(speciesUrl) {
 
   const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${speciesData.id}/`);
   const pokemonData = await pokemonResponse.json();
-
-  const imageUrl = pokemonData.sprites.other.dream_world.front_default;
+  const imageUrl = pokemonData.sprites.other.dream_world.front_default || pokemonData.sprites.other.home.front_default;
   return imageUrl;
 }
 
@@ -111,10 +124,14 @@ async function createEvolutionContainer() {
   containerRef.innerHTML = `
 <div class="d-flex align-items-center">
   <div class="d-flex align-items-start gap-3 w-100">
-    <div id="evo-container-base" class="d-flex align-items-center pointer"></div>
-
+  <div  class="d-flex align-items-center">
+    <div id="evo-container-base" class="d-flex align-items-center"></div>
+<div id="first-arrow" class="d-flex column align-items-center"></div>
+</div>
+  <div class="d-flex align-items-center">
     <div id="evo-container-first-evo" class="d-flex align-items-center justify-center"></div>
-
+<div id="second-arrow" class="d-flex column align-items-center"></div>
+</div>
     <div id="evo-container-second-evo" class="d-flex align-items-center justify-center"></div>
   </div>
 </div>
@@ -128,16 +145,13 @@ function displayBaseEvo(img, name) {
   <img class="chain" src="${img}" alt="Image of${name}" />
   <span>${name}</span>
 </div>
-<img class="arrow" src="./img/icon/right-arrow.png" alt="arrow" />
-<span></span>
-
 `;
 }
 
 function displayFirstEvo(img, name) {
   const container = document.getElementById("evo-container-first-evo");
   container.innerHTML += `
-   <div class="d-flex align-items-center column pointer">
+   <div class="d-flex align-items-center column">
   <img class="chain" src="${img}" alt="Image of ${name}" />
   <span>${name}</span>
 </div>
@@ -147,9 +161,7 @@ function displayFirstEvo(img, name) {
 function displaySecondEvo(img, name) {
   const container = document.getElementById("evo-container-second-evo");
   container.innerHTML += `
-<img class="arrow" src="./img/icon/right-arrow.png" alt="arrow" />
-<span></span>
-<div class="d-flex align-items-center column pointer">
+<div class="d-flex align-items-center column">
   <img class="chain" src="${img}" alt="Image of${name}" />
   <span>${name}</span>
 </div>
@@ -157,6 +169,9 @@ function displaySecondEvo(img, name) {
        `;
 }
 
-function displayArrow(id) {
+function displayArrow(id, evolutionTriggerName, levelUpRequerment) {
   document.getElementById(`${id}`).innerHTML = ``;
+  document.getElementById(`${id}`).innerHTML = `<img class="arrow" src="./img/icon/right-arrow.png" alt="arrow" />
+<span>${evolutionTriggerName}</span>
+<span>${levelUpRequerment}</span>`;
 }
