@@ -7,3 +7,10 @@ header {
 p {
   margin: 0;
 }
+#input-message {
+  font-size: 10px;
+}
+
+.search {
+  height: 45px;
+}

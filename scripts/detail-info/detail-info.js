@@ -57,23 +57,10 @@ function getPkmInfos(selectedPokemon) {
   let id = selectedPokemon.id;
   let type = selectedPokemon.types;
   let typeForChart = type[0].type.name;
-  let img;
-  try {
-    img = selectedPokemon.sprites.other.dream_world.front_default;
-    if (!img) {
-      throw new Error("404");
-    }
-  } catch (error) {
-    try {
-      img = selectedPokemon.sprites.other.home.front_default;
-      if (!img) {
-        throw new Error("404");
-      }
-    } catch (error) {
-      img = selectedPokemon.sprites.other.showdown.front_default;
-    }
-  }
-
+  let img =
+    selectedPokemon.sprites.other.dream_world.front_default ||
+    selectedPokemon.sprites.other.home.front_default ||
+    selectedPokemon.sprites.other.showdown.front_default;
   let weight = selectedPokemon.weight;
   let height = selectedPokemon.height;
 

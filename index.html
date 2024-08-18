@@ -24,7 +24,8 @@
     <script src="./scripts/detail-info/detail-info.js"></script>
     <script src="./scripts/detail-info/stats.js"></script>
     <script src="./scripts//detail-info/evolution-chain.js"></script>
-    <script src="./scripts//detail-info/ appearance.js"></script>
+    <script src="./scripts//detail-info/appearance.js"></script>
+    <script src="./scripts//detail-info/attacks.js"></script>
     <script src="./audio/audio.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
@@ -33,32 +34,9 @@
 
   <body onclick="closeDetailInfo(event)" onload="init()">
     <header id="header" class="d-flex justify-content-between align-items-center">
-    <span>Pokedex</span>  
-      <div class="d-flex align-items-center search">
-        <div class="btn-group">
+    <span onclick="init()" class="pointer">Pokedex</span>  
+      <div class="d-flex align-items-start search">
           <div class="btn-group">
-            <!-- <button
-              id="drop-down-1"
-              class="btn dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              data-bs-auto-close="outside"
-            >
-              Sprache
-            </button>
-
-            <ul class="dropdown-menu">
-              <li>
-                <a onclick="setLanguage('de'), closeDropDown()" class="dropdown-item" href="#">Deutsch</a>
-                <a onclick="setLanguage('en'), closeDropDown()" class="dropdown-item" href="#">Englisch</a>
-                <a onclick="setLanguage('it'), closeDropDown()" class="dropdown-item" href="#">Italiänisch</a>
-                <a onclick="setLanguage('fr'), closeDropDown()" class="dropdown-item" href="#">Französich</a>
-                <a onclick="setLanguage('ja'), closeDropDown()" class="dropdown-item" href="#">Japansich</a>
-                <a onclick="setLanguage('ko'), closeDropDown()" class="dropdown-item" href="#">Koreansich</a>
-              </li>
-            </ul>
-          </div> -->
-
           <button
             id="drop-down-1"
             class="btn dropdown-toggle"
@@ -109,8 +87,11 @@
           </ul>
         </div>
 
-        <input id="input" onkeyup="filterPkmName()" placeholder="Name des Pokemon" type="text" />
+        <div class="d-flex column">
+          <input id="input" onkeyup="filterPkmName()" placeholder="Name des Pokemon" type="text" />
+          <span id="input-message"></span>
       </div>
+
     </header>
 
     <main>

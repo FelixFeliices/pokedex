@@ -2,7 +2,6 @@ let promError = false;
 let startPokemon = 0;
 let cyle = 0;
 let filterActive = false;
-let currentLanguage = "en";
 let chunkedPokedex = []; //mit allen Infos
 let fullPokedex = []; // alle pokemos mit infos für filter funktion
 
@@ -14,7 +13,6 @@ function init() {
   filterActive = false;
   if (chunkedPokedex.length === 0) {
     usePromise(BASE_URL);
-    usePromise(FULL_POKEDEX_URL);
   } else {
     displayAllPokemons(chunkedPokedex);
   }
@@ -47,21 +45,20 @@ async function getPokemon(url) {
     let object = await fetchData(url);
     let speciesArray = object.results;
     cyle++;
-    getPokemonOverwiew(speciesArray);
+    await getPokemonOverwiew(speciesArray);
   } else if (cyle == 1) {
     let species = await fetchData(url);
     let fullSpeciesArray = species.results;
     cyle++;
-    getPokemonOverwiew(fullSpeciesArray);
-    console.log(cyle);
+    await getPokemonOverwiew(fullSpeciesArray);
   }
 }
 
 async function getPokemonOverwiew(array) {
   if (cyle == 1) {
-    fillChunckedPokedex(array);
+    await fillChunckedPokedex(array);
   } else if (cyle == 2) {
-    fillFullPokedex(array);
+    await fillFullPokedex(array);
   }
 }
 
@@ -77,6 +74,7 @@ async function fillChunckedPokedex(array) {
     createPokemonCard(id);
     displayPokemonDetails(id, pokemon);
     showLoadMore();
+    usePromise(FULL_POKEDEX_URL);
   }
 }
 
@@ -94,6 +92,7 @@ async function fillFullPokedex(array) {
 async function fetchData(url) {
   let response = await fetch(url);
   let responseAsJson = await response.json();
+
   return responseAsJson;
 }
 
