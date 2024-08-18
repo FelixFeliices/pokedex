@@ -3,10 +3,16 @@ function filterPkmName() {
   let filteredPokemons = fullPokedex.filter((pokemon) => pokemon.name.toLowerCase().includes(inputRef));
   filterActive = true;
   if (inputRef.length >= 3) {
-    displayFilteredPokemons(filteredPokemons);
+    prepareFilteredPokemons(filteredPokemons);
     $(".dropdown-menu").removeClass("show");
-  } else {
+    hideText();
+  }
+  if (inputRef.length <= 2) {
+    showText();
     init();
+  }
+  if (checkLenghtEqualZero(inputRef)) {
+    hideText();
   }
 }
 
@@ -19,28 +25,30 @@ function filterPkmType(parameter) {
         return true;
       }
     }
-
     return false;
   });
 
-  displayFilteredPokemons(filteredPokemons);
+  prepareFilteredPokemons(filteredPokemons);
   closeDropDown();
 }
 
-function displayFilteredPokemons(pokemons) {
-  let contentRef = document.getElementById("content");
-  contentRef.innerHTML = "";
+function prepareFilteredPokemons(pokemons) {
+  document.getElementById("content").innerHTML = "";
 
-  if (pokemons.length === 0) {
-    contentRef.innerHTML = "Pokemon nicht gefunden";
+  if (checkLenghtEqualZero(pokemons)) {
+    document.getElementById("content").innerHTML = "Pokemon not found";
   } else {
-    for (let i = 0; i < pokemons.length; i++) {
-      let pokemon = pokemons[i];
-      let pokemonIndex = fullPokedex.indexOf(pokemon);
-      createPokemonCard(pokemonIndex);
-      displayPokemonDetails(pokemonIndex, pokemon);
-      hideLoadMore();
-    }
+    showFiltredPokemon(pokemons);
+  }
+}
+
+function showFiltredPokemon(pokemons) {
+  for (let i = 0; i < pokemons.length; i++) {
+    let pokemon = pokemons[i];
+    let pokemonIndex = fullPokedex.indexOf(pokemon);
+    createPokemonCard(pokemonIndex);
+    displayPokemonDetails(pokemonIndex, pokemon);
+    hideLoadMore();
   }
 }
 
@@ -59,4 +67,17 @@ function hideLoadMore() {
 function showLoadMore() {
   let buttonRef = document.getElementById("load-more-btn");
   buttonRef.classList.remove("d-none");
+}
+
+function showText() {
+  let inputTextRef = document.getElementById("input-message");
+  inputTextRef.classList.remove("d-none");
+}
+function hideText() {
+  let inputTextRef = document.getElementById("input-message");
+  inputTextRef.classList.add("d-none");
+}
+
+function checkLenghtEqualZero(param) {
+  return param.length === 0;
 }

@@ -18,10 +18,6 @@
   overflow: hidden;
 }
 
-d-none {
-  display: none !important;
-}
-
 .detail-info {
   height: 80vh;
   width: 550px;
@@ -107,4 +103,8 @@ d-none {
   max-width: 300px;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.move {
+  font-size: 12px;
 }

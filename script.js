@@ -2,6 +2,7 @@ let promError = false;
 let startPokemon = 0;
 let cyle = 0;
 let filterActive = false;
+let loadMoreActive = false;
 let chunkedPokedex = []; //mit allen Infos
 let fullPokedex = []; // alle pokemos mit infos für filter funktion
 
@@ -11,6 +12,7 @@ const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&lim
 function init() {
   clearContent();
   filterActive = false;
+  loadMoreActive = false;
   if (chunkedPokedex.length === 0) {
     usePromise(BASE_URL);
   } else {
@@ -45,20 +47,20 @@ async function getPokemon(url) {
     let object = await fetchData(url);
     let speciesArray = object.results;
     cyle++;
-    await getPokemonOverwiew(speciesArray);
+    getPokemonOverwiew(speciesArray);
   } else if (cyle == 1) {
     let species = await fetchData(url);
     let fullSpeciesArray = species.results;
     cyle++;
-    await getPokemonOverwiew(fullSpeciesArray);
+    getPokemonOverwiew(fullSpeciesArray);
   }
 }
 
-async function getPokemonOverwiew(array) {
+function getPokemonOverwiew(array) {
   if (cyle == 1) {
-    await fillChunckedPokedex(array);
+    fillChunckedPokedex(array);
   } else if (cyle == 2) {
-    await fillFullPokedex(array);
+    fillFullPokedex(array);
   }
 }
 
@@ -70,11 +72,16 @@ async function fillChunckedPokedex(array) {
     let pokemon = await fetchData(pokemonURl);
     let id = pokemon.id;
     chunkedPokedex[id] = pokemon;
-
-    createPokemonCard(id);
-    displayPokemonDetails(id, pokemon);
-    showLoadMore();
-    usePromise(FULL_POKEDEX_URL);
+    if (!loadMoreActive) {
+      createPokemonCard(id);
+      displayPokemonDetails(id, pokemon);
+      showLoadMore();
+      usePromise(FULL_POKEDEX_URL);
+    } else {
+      createPokemonCard(id);
+      displayPokemonDetails(id, pokemon);
+      showLoadMore();
+    }
   }
 }
 
@@ -116,8 +123,9 @@ function createPokemonCard(pokemonIndex) {
 function loadPokemons() {
   cyle = 0;
   startPokemon = chunkedPokedex.length - 1;
-  BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
-  usePromise(BASE_URL);
+  LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
+  loadMoreActive = true;
+  usePromise(LOAD_URL);
 }
 
 function displayPokemonDetails(pokemonIndex, choosenArray) {

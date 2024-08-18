@@ -25,7 +25,7 @@
     <script src="./scripts/detail-info/stats.js"></script>
     <script src="./scripts//detail-info/evolution-chain.js"></script>
     <script src="./scripts//detail-info/appearance.js"></script>
-    <script src="./scripts//detail-info/attacks.js"></script>
+    <script src="./scripts//detail-info/moves.js"></script>
     <script src="./audio/audio.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
@@ -36,7 +36,7 @@
     <header id="header" class="d-flex justify-content-between align-items-center">
     <span onclick="init()" class="pointer">Pokedex</span>  
       <div class="d-flex align-items-start search">
-          <div class="btn-group">
+        <div class="btn-group">
           <button
             id="drop-down-1"
             class="btn dropdown-toggle"
@@ -89,7 +89,7 @@
 
         <div class="d-flex column">
           <input id="input" onkeyup="filterPkmName()" placeholder="Name des Pokemon" type="text" />
-          <span id="input-message"></span>
+          <span id="input-message" class="d-none">3 Letters required</span>
       </div>
 
     </header>
