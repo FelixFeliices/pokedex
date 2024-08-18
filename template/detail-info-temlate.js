@@ -3,7 +3,7 @@ function detailInfoTemplate(pokemonIndex, id) {
   <div class="card-body align-middle">
     <div class="prev-next">
       <div onclick="prevPkm(${pokemonIndex})" class="btn" id="prev">Prev</div>
-      <div onclick="nextPkm(${pokemonIndex})" class="btn">Next</div>
+      <div onclick="nextPkm(${pokemonIndex})" class="btn" id="next">Next</div>
     </div>
     <div class="up">
       <div id="pokemon-name-id" class="row"></div>
@@ -14,6 +14,7 @@ function detailInfoTemplate(pokemonIndex, id) {
       ><button class="btn" onclick="playCries(${pokemonIndex})">Sound Abspielen</button>
       <audio id="audio1" style="display: none"></audio>
     </div>
+     <div id="flavour-container" class="d-flex justify-content-between align-items-center w-100 text-wrap"></div>
     <div class="down">
       <div class="btn-group">
         <a
@@ -21,7 +22,7 @@ function detailInfoTemplate(pokemonIndex, id) {
           href="#"
           class="btn btn-secondary active"
           aria-current="page"
-          >Stats</a
+          >About</a
         >
         <a onclick="showEvolutionChain(${id})" href="#" class="btn btn-secondary">Evolution Chain</a>
         <a onclick="showAppearance(${pokemonIndex})" href="#" class="btn btn-secondary">Erscheinungen</a>

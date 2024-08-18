@@ -11,6 +11,7 @@ const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&lim
 
 function init() {
   clearContent();
+  disableLoadBtn();
   filterActive = false;
   loadMoreActive = false;
   if (chunkedPokedex.length === 0) {
@@ -77,10 +78,12 @@ async function fillChunckedPokedex(array) {
       displayPokemonDetails(id, pokemon);
       showLoadMore();
       usePromise(FULL_POKEDEX_URL);
+      enableLoadBtn();
     } else {
       createPokemonCard(id);
       displayPokemonDetails(id, pokemon);
       showLoadMore();
+      enableLoadBtn();
     }
   }
 }
@@ -125,6 +128,7 @@ function loadPokemons() {
   startPokemon = chunkedPokedex.length - 1;
   LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
   loadMoreActive = true;
+  disableLoadBtn();
   usePromise(LOAD_URL);
 }
 
@@ -144,24 +148,12 @@ function displayNameAndId(pokemonIndex, choosenArray) {
 
 function displayImg(pokemonIndex, choosenArray) {
   let pokemonImgRef = document.getElementById(`pokemon-img${pokemonIndex}`);
-  let img;
-  try {
-    img = choosenArray.sprites.other.dream_world.front_default;
-    if (!img) {
-      throw new Error("404");
-    }
-    pokemonImgRef.src = img;
-  } catch (error) {
-    try {
-      img = choosenArray.sprites.other.home.front_default;
-      if (!img) {
-        throw new Error("404");
-      }
-      pokemonImgRef.src = img;
-    } catch (error) {
-      pokemonImgRef.src = choosenArray.sprites.other.showdown.front_default;
-    }
-  }
+  let img =
+    choosenArray.sprites.other.dream_world.front_default ||
+    choosenArray.sprites.other.home.front_default ||
+    choosenArray.sprites.other.showdown.front_default;
+
+  pokemonImgRef.src = img;
 }
 
 function displayType(pokemonIndex, choosenArray) {
@@ -219,4 +211,16 @@ function clearContent() {
 
   contentRef.innerHTML = "";
   buttonRef.classList.remove("d-none");
+}
+
+function disableLoadBtn() {
+  let buttonRef = document.getElementById("load-more-btn");
+  buttonRef.disabled = true;
+}
+
+function enableLoadBtn() {
+  let buttonRef = document.getElementById("load-more-btn");
+  setTimeout(() => {
+    buttonRef.disabled = false;
+  }, 3000);
 }
