@@ -38,7 +38,6 @@ function calculatePoints(stats, maxValue) {
 
 function updateColorSpiderChart(typeForChart) {
   let dataPolygonRef = document.getElementById("data-polygon");
-
   dataPolygonRef.classList.add(typeForChart);
 }
 

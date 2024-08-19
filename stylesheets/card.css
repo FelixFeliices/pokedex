@@ -23,6 +23,7 @@
 }
 
 .name {
+  font-weight: 600;
   position: absolute;
   top: 8px;
 }

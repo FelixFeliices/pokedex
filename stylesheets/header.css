@@ -15,3 +15,7 @@ p {
 .search {
   height: 45px;
 }
+
+#drop-down-1 {
+  padding-top: 0;
+}

@@ -57,6 +57,7 @@ function closeDropDown() {
   document.getElementById("drop-down-1").setAttribute("aria-expanded", false);
   $("#drop-down-2").dropdown("toggle");
   document.getElementById("drop-down-2").setAttribute("aria-expanded", false);
+  enableLoadBtn();
 }
 
 function hideLoadMore() {

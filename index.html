@@ -34,6 +34,7 @@
 
   <body onclick="closeDetailInfo(event)" onload="init()">
     <header id="header" class="d-flex justify-content-between align-items-center">
+      <div class="d-flex justify-content-between w-100">
     <span onclick="init()" class="pointer">Pokedex</span>  
       <div class="d-flex align-items-start search">
         <div class="btn-group">
@@ -91,7 +92,7 @@
           <input id="input" onkeyup="filterPkmName()" placeholder="Name des Pokemon" type="text" />
           <span id="input-message" class="d-none">3 Letters required</span>
       </div>
-
+</div>
     </header>
 
     <main>

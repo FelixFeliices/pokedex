@@ -67,6 +67,7 @@ function getPkmInfos(pokemon) {
   updateColorSpiderChart(typeForChart);
   renderInfosInOvererlay(pokemon, img);
   showFlavourText(pokemon);
+  displayAbout(pokemon);
 }
 
 function renderInfosInOvererlay(pokemon, img) {
@@ -102,6 +103,5 @@ async function getFlavourText(pokemon) {
   let url = pokemon.species.url;
   let species = await fetchData(url);
   let text = species.flavor_text_entries[1].flavor_text;
-  console.log(species.flavor_text_entries);
   return text;
 }
