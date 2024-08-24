@@ -1,40 +1,36 @@
 @font-face {
-  font-family: roboto;
-  src: url(./fonts/Raleway/Raleway-VariableFont_wght.ttf);
+    font-family: roboto;
+    src: url(./fonts/Raleway/Raleway-VariableFont_wght.ttf);
 }
 
 * {
-  scroll-behavior: smooth;
-  font-family: roboto;
-  /* font-weight: 500; */
-}
-
-html,
-body {
-  height: 100vh;
-  width: 100%;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    scroll-behavior: smooth;
+    font-family: roboto;
+    /* font-weight: 500; */
 }
 
 main {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  max-width: 1440px;
-}
-
-@media (min-width: 1440px) {
+    flex: 1;
+    max-width: 1440px;
 }
 
 .icon {
-  height: 40px;
-  width: 40px;
+    height: 40px;
+    width: 40px;
 }
 
 #content {
-  gap: 64px;
+    gap: 64px;
+}
+
+@media (max-width: 689px) {
+    #header {
+        padding: 16px 8px 0px 8px;
+    }
+}
+
+@media (max-width: 452px) {
+    .headline {
+        display: none;
+    }
 }
