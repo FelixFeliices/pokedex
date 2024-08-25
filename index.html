@@ -35,8 +35,9 @@
 
 <body onclick="closeDetailInfo(event)" onload="init()" class="d-flex column align-items-center width-100 vh-100">
     <header id="header" class="d-flex fixed-top w-100">
-        <div class="d-flex justify-content-between w-100">
+        <div class="d-flex justify-content-between align-items-center w-100">
             <span onclick="init()" class="pointer headline">Pokedex</span>
+            <img class="header-responsive-img" onclick="init()" src="./img/icon/header-responsive.png">
             <div class="d-flex align-items-start search">
                 <div class="btn-group">
                     <button id="drop-down-1" class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -45,12 +46,12 @@
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a onclick="init(),closeDropDown()" class="dropdown-item" href="#">Alle Anzeigen</a>
+                            <a onclick="init(),closeDropDown()" class="dropdown-item" href="#">Reset Filter</a>
                         </li>
                         <li>
                             <div>
                                 <button id="drop-down-2" class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
-                  Pokemon nach Typ suchen
+                  Search Pokemon by Type
                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a onclick="filterPkmType('bug')" class="dropdown-item" href="#">Bug</a></li>
@@ -74,11 +75,25 @@
                                 </ul>
                             </div>
                         </li>
+
+                        <li>
+                            <div>
+                                <button id="drop-down-3" class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                  Example Names 
+                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a onclick="filterPkmType('bug')" class="dropdown-item" href="#">Evee</a></li>
+                                    <li><a onclick="filterPkmType('dark')" class="dropdown-item" href="#">Mew</a></li>
+                                    <li><a onclick="filterPkmType('dragon')" class="dropdown-item" href="#">Pickachu</a></li>
+                                    <li><a onclick="filterPkmType('water')" class="dropdown-item" href="#">Vulpix</a></li>
+                                </ul>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="d-flex column">
-                    <input id="input" onkeyup="filterPkmName()" placeholder="Name des Pokemon" type="text" />
+                    <input id="input" onkeyup="filterPkmName()" placeholder="Search by Name" type="text" />
                     <span id="input-message" class="d-none">3 Letters required</span>
                 </div>
             </div>

@@ -1,51 +1,30 @@
-.card {
-  text-wrap: nowrap;
-  width: 214px;
-  height: 280px;
-}
-
-.pointer:hover {
-  cursor: pointer;
-}
-
-.card-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.pokemon-types {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+.pokemon-card {
+    width: 214px;
+    height: 280px;
 }
 
 .name {
-  font-weight: 600;
-  position: absolute;
-  top: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    position: absolute;
+    top: 8px;
 }
 
 .pokemon-types-container {
-  display: flex;
-  position: absolute;
-  bottom: 0px;
-  justify-content: space-between;
-  width: 100%;
-  gap: 8px;
-  padding: 8px;
+    bottom: 0px;
+    gap: 40px;
+    padding: 8px;
 }
 
 .pokemonImg {
-  width: 180px;
-  height: 180px;
-  z-index: 10;
-  transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+    width: 180px;
+    height: 180px;
+    z-index: 10;
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+    filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.7));
 }
 
 .pokemonImg:hover {
-  width: 240px;
-  height: 240px;
+    width: 240px;
+    height: 240px;
 }

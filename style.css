@@ -23,14 +23,16 @@ main {
     gap: 64px;
 }
 
-@media (max-width: 689px) {
-    #header {
-        padding: 16px 8px 0px 8px;
-    }
+.pointer:hover {
+    cursor: pointer;
 }
 
 @media (max-width: 452px) {
     .headline {
         display: none;
+    }
+    .header-responsive-img {
+        display: unset !important;
+        height: 70px;
     }
 }
