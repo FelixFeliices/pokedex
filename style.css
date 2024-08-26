@@ -27,12 +27,25 @@ main {
     cursor: pointer;
 }
 
+.transparent {
+    color: transparent !important;
+}
+
 @media (max-width: 452px) {
     .headline {
         display: none;
     }
-    .header-responsive-img {
-        display: unset !important;
-        height: 70px;
+    .pokeball {
+        height: 80px !important;
+    }
+    .search {
+        flex-direction: column-reverse;
+        height: 77px !important;
+    }
+    #header-container {
+        align-items: flex-start !important;
+    }
+    #drop-down-1 {
+        padding-left: 0;
     }
 }

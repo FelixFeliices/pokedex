@@ -22,10 +22,17 @@ p {
     padding-top: 0;
 }
 
-.header-responsive-img {
-    display: none;
+.logo {
+    display: flex;
+    align-items: flex-start;
+}
+
+.pokeball {
+    height: 64px;
 }
 
 .headline {
     align-self: flex-start;
+    font-size: 24px;
+    font-weight: bold;
 }

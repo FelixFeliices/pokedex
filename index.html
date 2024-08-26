@@ -35,9 +35,11 @@
 
 <body onclick="closeDetailInfo(event)" onload="init()" class="d-flex column align-items-center width-100 vh-100">
     <header id="header" class="d-flex fixed-top w-100">
-        <div class="d-flex justify-content-between align-items-center w-100">
-            <span onclick="init()" class="pointer headline">Pokedex</span>
-            <img class="header-responsive-img" onclick="init()" src="./img/icon/header-responsive.png">
+        <div id="header-container" class="d-flex justify-content-between align-items-center w-100">
+            <div onclick="init()" class="pointer logo">
+                <img class="pokeball" src="./img/icon/header-responsive.png">
+                <img class="headline" src="./img/icon/pokedex2.png" alt="">
+            </div>
             <div class="d-flex align-items-start search">
                 <div class="btn-group">
                     <button id="drop-down-1" class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -82,10 +84,9 @@
                   Example Names 
                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a onclick="filterPkmType('bug')" class="dropdown-item" href="#">Evee</a></li>
-                                    <li><a onclick="filterPkmType('dark')" class="dropdown-item" href="#">Mew</a></li>
-                                    <li><a onclick="filterPkmType('dragon')" class="dropdown-item" href="#">Pickachu</a></li>
-                                    <li><a onclick="filterPkmType('water')" class="dropdown-item" href="#">Vulpix</a></li>
+                                    <li><a onclick="filterExamplePkmName('EEVEE')" class="dropdown-item" href="#">EEVEE</a></li>
+                                    <li><a onclick="filterExamplePkmName('MEW')" class="dropdown-item" href="#">MEW</a></li>
+                                    <li><a onclick="filterExamplePkmName('PIKACHU')" class="dropdown-item" href="#">PIKACHU</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -94,7 +95,7 @@
 
                 <div class="d-flex column">
                     <input id="input" onkeyup="filterPkmName()" placeholder="Search by Name" type="text" />
-                    <span id="input-message" class="d-none">3 Letters required</span>
+                    <span id="input-message" class="transparent">3 Letters required</span>
                 </div>
             </div>
     </header>
@@ -115,8 +116,8 @@
     <button class="btn btn-primary w-25" id="load-more-btn" onclick="loadPokemons()">Mehr laden</button>
 
     <footer id="footer" class="d-flex justify-content-between align-items-center p-4">
-        <p>Marc Schaar</p>
-        <p>Marc Schaar</p>
+        <!-- <p>Marc Schaar</p>
+        <p>Marc Schaar</p> -->
     </footer>
 </body>
 
