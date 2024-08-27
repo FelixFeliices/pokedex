@@ -1,110 +1,77 @@
 .detail-info-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 40px;
-  z-index: 100;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 0 40px;
+    z-index: 100;
 }
 
 .bg-info-card {
-  max-height: 100vh;
-  padding-top: 100px;
-  overflow: hidden;
+    height: 100vh;
+    padding-top: 100px;
+    overflow: hidden;
 }
 
 .detail-info {
-  height: 80vh;
-  width: 550px;
+    height: 80vh;
+    width: 550px;
 }
 
-.prev-next {
-  display: flex;
-  position: absolute;
-  top: 25%;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.up {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-#pokemon-name-id {
-  position: absolute;
-  top: 4px;
-}
 #pokemon-img {
-  max-width: 360px;
-  max-height: 200px;
-}
-
-.down {
-  height: 355px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    width: 320px;
+    height: 200px;
 }
 
 #container {
-  display: flex;
-  justify-content: center;
-  height: 100%;
+    height: 300px;
 }
 
 #container svg {
-  position: relative;
-  height: 280px;
-  width: 320px;
+    position: relative;
+    height: 280px;
+    width: 320px;
 }
 
 #stats-table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .progress-bar {
-  text-align: start;
+    text-align: start;
 }
 
 .chain {
-  width: 80px;
-  height: 80px;
+    width: 80px;
+    height: 80px;
 }
 
 .arrow {
-  height: 40px;
-}
-.column {
-  flex-direction: column;
+    height: 40px;
 }
 
+
+/* .column {
+    flex-direction: column;
+} */
+
 .appearance {
-  height: 90px;
-  width: 90px;
+    height: 90px;
+    width: 90px;
 }
 
 .wrap {
-  flex-wrap: wrap;
-  gap: 16px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 #evo-container-first-evo {
-  max-width: 300px;
-  flex-wrap: wrap;
-  gap: 8px;
+    max-width: 300px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .move {
-  font-size: 12px;
+    font-size: 12px;
 }

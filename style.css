@@ -14,6 +14,10 @@ main {
     max-width: 1440px;
 }
 
+.column {
+    flex-direction: column;
+}
+
 .icon {
     height: 40px;
     width: 40px;
@@ -31,12 +35,14 @@ main {
     color: transparent !important;
 }
 
-@media (max-width: 452px) {
+#content {
+    margin: 8px;
+    margin-top: 120px;
+}
+
+@media (max-width: 467px) {
     .headline {
         display: none;
-    }
-    .pokeball {
-        height: 80px !important;
     }
     .search {
         flex-direction: column-reverse;
