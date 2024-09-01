@@ -10,217 +10,218 @@ let BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}
 const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&limit=1025`;
 
 function init() {
-  clearContent();
-  disableLoadBtn();
-  filterActive = false;
-  loadMoreActive = false;
-  if (chunkedPokedex.length === 0) {
-    usePromise(BASE_URL);
-  } else {
-    displayAllPokemons(chunkedPokedex);
-  }
+    clearContent();
+    disableLoadBtn();
+    filterActive = false;
+    loadMoreActive = false;
+    if (chunkedPokedex.length === 0) {
+        usePromise(BASE_URL);
+    } else {
+        displayAllPokemons(chunkedPokedex);
+    }
 }
 
 async function usePromise(URL) {
-  try {
-    await getPromise(URL);
-  } catch (error) {
-    console.log("error", error);
-  } finally {
-    disableDisplayLoadScreen();
-  }
+    try {
+        await getPromise(URL);
+    } catch (error) {
+        console.log("error", error);
+    } finally {
+        disableDisplayLoadScreen();
+    }
 }
+
 function getPromise(URL) {
-  return new Promise((resolve, reject) => {
-    displayLoadScreen();
-    setTimeout(() => {
-      if (promError) {
-        reject();
-      } else {
-        resolve(getPokemon(URL));
-      }
-    }, 2000);
-  });
+    return new Promise((resolve, reject) => {
+        displayLoadScreen();
+        setTimeout(() => {
+            if (promError) {
+                reject();
+            } else {
+                resolve(getPokemon(URL));
+            }
+        }, 2000);
+    });
 }
 
 async function getPokemon(url) {
-  if (cyle == 0) {
-    let object = await fetchData(url);
-    let speciesArray = object.results;
-    cyle++;
-    getPokemonOverwiew(speciesArray);
-  } else if (cyle == 1) {
-    let species = await fetchData(url);
-    let fullSpeciesArray = species.results;
-    cyle++;
-    getPokemonOverwiew(fullSpeciesArray);
-  }
+    if (cyle == 0) {
+        let object = await fetchData(url);
+        let speciesArray = object.results;
+        cyle++;
+        getPokemonOverwiew(speciesArray);
+    } else if (cyle == 1) {
+        let species = await fetchData(url);
+        let fullSpeciesArray = species.results;
+        cyle++;
+        getPokemonOverwiew(fullSpeciesArray);
+    }
 }
 
 function getPokemonOverwiew(array) {
-  if (cyle == 1) {
-    fillChunckedPokedex(array);
-  } else if (cyle == 2) {
-    fillFullPokedex(array);
-  }
+    if (cyle == 1) {
+        fillChunckedPokedex(array);
+    } else if (cyle == 2) {
+        fillFullPokedex(array);
+    }
 }
 
 async function fillChunckedPokedex(array) {
-  for (const species of array) {
-    let speciesURL = species.url;
-    let speciesOverwiew = await fetchData(speciesURL);
-    let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
-    let pokemon = await fetchData(pokemonURl);
-    let id = pokemon.id;
-    chunkedPokedex[id] = pokemon;
-    if (!loadMoreActive) {
-      createPokemonCard(id);
-      displayPokemonDetails(id, pokemon);
-      showLoadMore();
-      usePromise(FULL_POKEDEX_URL);
-      enableLoadBtn();
-    } else {
-      createPokemonCard(id);
-      displayPokemonDetails(id, pokemon);
-      showLoadMore();
-      enableLoadBtn();
+    for (const species of array) {
+        let speciesURL = species.url;
+        let speciesOverwiew = await fetchData(speciesURL);
+        let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
+        let pokemon = await fetchData(pokemonURl);
+        let id = pokemon.id;
+        chunkedPokedex[id] = pokemon;
+        if (!loadMoreActive) {
+            createPokemonCard(id);
+            displayPokemonDetails(id, pokemon);
+            showLoadMore();
+            usePromise(FULL_POKEDEX_URL);
+            enableLoadBtn();
+        } else {
+            createPokemonCard(id);
+            displayPokemonDetails(id, pokemon);
+            showLoadMore();
+            enableLoadBtn();
+        }
     }
-  }
 }
 
 async function fillFullPokedex(array) {
-  for (const species of array) {
-    let speciesURL = species.url;
-    let speciesOverwiew = await fetchData(speciesURL);
-    let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
-    let pokemon = await fetchData(pokemonURl);
-    let id = pokemon.id;
-    fullPokedex[id] = pokemon;
-  }
+    for (const species of array) {
+        let speciesURL = species.url;
+        let speciesOverwiew = await fetchData(speciesURL);
+        let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
+        let pokemon = await fetchData(pokemonURl);
+        let id = pokemon.id;
+        fullPokedex[id] = pokemon;
+    }
 }
 
 async function fetchData(url) {
-  let response = await fetch(url);
-  let responseAsJson = await response.json();
+    let response = await fetch(url);
+    let responseAsJson = await response.json();
 
-  return responseAsJson;
+    return responseAsJson;
 }
 
 function displayAllPokemons(pokemons) {
-  clearContent();
+    clearContent();
 
-  for (let i = 1; i < pokemons.length; i++) {
-    let pokemon = pokemons[i];
-    let pokemonIndex = chunkedPokedex.indexOf(pokemon);
+    for (let i = 1; i < pokemons.length; i++) {
+        let pokemon = pokemons[i];
+        let pokemonIndex = chunkedPokedex.indexOf(pokemon);
 
-    createPokemonCard(pokemonIndex);
-    displayPokemonDetails(pokemonIndex, chunkedPokedex[pokemonIndex]);
-  }
+        createPokemonCard(pokemonIndex);
+        displayPokemonDetails(pokemonIndex, chunkedPokedex[pokemonIndex]);
+    }
 }
 
 function createPokemonCard(pokemonIndex) {
-  let contentRef = document.getElementById("content");
-  contentRef.innerHTML += renderPkmCard(pokemonIndex);
+    let contentRef = document.getElementById("content");
+    contentRef.innerHTML += renderPkmCard(pokemonIndex);
 }
 
 function loadPokemons() {
-  cyle = 0;
-  startPokemon = chunkedPokedex.length - 1;
-  LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
-  loadMoreActive = true;
-  disableLoadBtn();
-  usePromise(LOAD_URL);
+    cyle = 0;
+    startPokemon = chunkedPokedex.length - 1;
+    LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
+    loadMoreActive = true;
+    disableLoadBtn();
+    usePromise(LOAD_URL);
 }
 
 function displayPokemonDetails(pokemonIndex, choosenArray) {
-  displayNameAndId(pokemonIndex, choosenArray);
-  displayImg(pokemonIndex, choosenArray);
-  displayType(pokemonIndex, choosenArray);
-  updateBgColor(pokemonIndex, choosenArray);
+    displayNameAndId(pokemonIndex, choosenArray);
+    displayImg(pokemonIndex, choosenArray);
+    displayType(pokemonIndex, choosenArray);
+    updateBgColor(pokemonIndex, choosenArray);
 }
 
 function displayNameAndId(pokemonIndex, choosenArray) {
-  let id_nameRef = document.getElementById(`id_name${pokemonIndex}`);
-  let id = choosenArray.id;
-  let name = choosenArray.name;
-  id_nameRef.innerHTML = `#${id} ${name.toUpperCase()}`;
+    let id_nameRef = document.getElementById(`id_name${pokemonIndex}`);
+    let id = choosenArray.id;
+    let name = choosenArray.name;
+    id_nameRef.innerHTML = `#${id} ${name.toUpperCase()}`;
 }
 
 function displayImg(pokemonIndex, choosenArray) {
-  let pokemonImgRef = document.getElementById(`pokemon-img${pokemonIndex}`);
-  let img =
-    choosenArray.sprites.other.dream_world.front_default ||
-    choosenArray.sprites.other.home.front_default ||
-    choosenArray.sprites.other.showdown.front_default;
+    let pokemonImgRef = document.getElementById(`pokemon-img${pokemonIndex}`);
+    let img =
+        choosenArray.sprites.other.dream_world.front_default ||
+        choosenArray.sprites.other.home.front_default ||
+        choosenArray.sprites.other.showdown.front_default;
 
-  pokemonImgRef.src = img;
+    pokemonImgRef.src = img;
 }
 
 function displayType(pokemonIndex, choosenArray) {
-  for (let typeIndex = 0; typeIndex < choosenArray.types.length; typeIndex++) {
-    const pokemonTypes = choosenArray.types[typeIndex].type.name;
+    for (let typeIndex = 0; typeIndex < choosenArray.types.length; typeIndex++) {
+        const pokemonTypes = choosenArray.types[typeIndex].type.name;
 
-    if (typeIndex === 0) {
-      renderFirstTypeImg(pokemonIndex, pokemonTypes);
-    } else if (typeIndex === 1) {
-      renderSecondTypeImg(pokemonIndex, pokemonTypes);
+        if (typeIndex === 0) {
+            renderFirstTypeImg(pokemonIndex, pokemonTypes);
+        } else if (typeIndex === 1) {
+            renderSecondTypeImg(pokemonIndex, pokemonTypes);
+        }
     }
-  }
 
-  if (checkSecondTypeAvailable(choosenArray)) {
-    hideEmptyType(pokemonIndex);
-  }
+    if (checkSecondTypeAvailable(choosenArray)) {
+        hideEmptyType(pokemonIndex);
+    }
 }
 
 function checkType(pokemonTypes) {
-  return pokemonTypes === `${pokemonTypes}`;
+    return pokemonTypes === `${pokemonTypes}`;
 }
 
 function checkSecondTypeAvailable(choosenArray) {
-  return choosenArray.types.length <= 1;
+    return choosenArray.types.length <= 1;
 }
 
 function renderFirstTypeImg(pokemonIndex, pokemonTypes) {
-  let pokemonFirstImgTypeRef = document.getElementById(`pokemon-first-type-img${pokemonIndex}`);
+    let pokemonFirstImgTypeRef = document.getElementById(`pokemon-first-type-img${pokemonIndex}`);
 
-  pokemonFirstImgTypeRef.src = "";
-  pokemonFirstImgTypeRef.src = `./img/icon/icon-types/${pokemonTypes}.svg`;
+    pokemonFirstImgTypeRef.src = "";
+    pokemonFirstImgTypeRef.src = `./img/icon/icon-types/${pokemonTypes}.svg`;
 }
 
 function renderSecondTypeImg(pokemonIndex, pokemonTypes) {
-  let pokemonSecondImgTypeRef = document.getElementById(`pokemon-second-type-img${pokemonIndex}`);
+    let pokemonSecondImgTypeRef = document.getElementById(`pokemon-second-type-img${pokemonIndex}`);
 
-  pokemonSecondImgTypeRef.src = "";
-  pokemonSecondImgTypeRef.src = `./img/icon/icon-types/${pokemonTypes}.svg`;
+    pokemonSecondImgTypeRef.src = "";
+    pokemonSecondImgTypeRef.src = `./img/icon/icon-types/${pokemonTypes}.svg`;
 }
 
 function hideEmptyType(pokemonIndex) {
-  let pokemonSecondImgTypeRef = document.getElementById(`pokemon-second-type-img${pokemonIndex}`);
-  pokemonSecondImgTypeRef.classList.add("d-none");
+    let pokemonSecondImgTypeRef = document.getElementById(`pokemon-second-type-img${pokemonIndex}`);
+    pokemonSecondImgTypeRef.classList.add("d-none");
 }
 
 function updateBgColor(pokemonIndex, choosenArray) {
-  let cardRef = document.getElementById(`pokemon-card-${pokemonIndex}`);
-  let typeForBg = choosenArray.types[0].type.name;
-  cardRef.classList.add(`${typeForBg}`);
+    let cardRef = document.getElementById(`pokemon-card-${pokemonIndex}`);
+    let typeForBg = choosenArray.types[0].type.name;
+    cardRef.classList.add(`${typeForBg}`);
 }
 
 function clearContent() {
-  let contentRef = document.getElementById("content");
-  let buttonRef = document.getElementById("load-more-btn");
+    let contentRef = document.getElementById("content");
+    let buttonRef = document.getElementById("load-more-btn");
 
-  contentRef.innerHTML = "";
-  buttonRef.classList.remove("d-none");
+    contentRef.innerHTML = "";
+    buttonRef.classList.remove("d-none");
 }
 
 function disableLoadBtn() {
-  let buttonRef = document.getElementById("load-more-btn");
-  buttonRef.disabled = true;
+    let buttonRef = document.getElementById("load-more-btn");
+    buttonRef.disabled = true;
 }
 
 function enableLoadBtn() {
-  let buttonRef = document.getElementById("load-more-btn");
-  setTimeout(() => {
-    buttonRef.disabled = false;
-  }, 3000);
+    let buttonRef = document.getElementById("load-more-btn");
+    setTimeout(() => {
+        buttonRef.disabled = false;
+    }, 3000);
 }

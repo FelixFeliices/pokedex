@@ -1,7 +1,7 @@
 function loadSpinner() {
-  return `
+    return `
   <div class="container">
-  <img id="load-spinner" src="./img/icon/loadspinner.png" alt="Lädt...">
+  <img class="position-absolute" id="load-spinner" src="./img/icon/loadspinner.png" alt="Lädt...">
   <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <!-- Zeichne den ersten Hintergrundkreis -->
   <circle cx="100" cy="100" r="91" fill="none" stroke="lightgrey" stroke-width="4"/>

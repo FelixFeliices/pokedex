@@ -8,8 +8,8 @@
 
 .bg-info-card {
     height: 100vh;
-    padding-top: 100px;
     overflow: hidden;
+    margin: 0 !important;
 }
 
 .detail-info {
@@ -23,23 +23,12 @@
 }
 
 #container {
-    height: 300px;
-}
-
-#container svg {
-    position: relative;
     height: 280px;
-    width: 320px;
 }
 
-#stats-table {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.progress-bar {
-    text-align: start;
+#statName {
+    font-size: 12px;
+    width: 150px;
 }
 
 .chain {
@@ -50,11 +39,6 @@
 .arrow {
     height: 40px;
 }
-
-
-/* .column {
-    flex-direction: column;
-} */
 
 .appearance {
     height: 90px;

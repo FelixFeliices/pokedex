@@ -1,4 +1,3 @@
-let checkboxStatus = false;
 let audioURL = "";
 
 function openDetailInfo(event) {
@@ -23,7 +22,7 @@ function closeDetailInfo(event) {
     let footerRef = document.getElementById("footer");
     let overlayerRef = document.getElementById("overlayer");
     let buttonRef = document.getElementById("load-more-btn");
-    if (!event.target.closest("#detail-info")) {
+    if (!event.target.closest("#detail-info") || event.target.closest("#close-button")) {
         headertRef.classList.remove("d-none");
         footerRef.classList.remove("d-none");
         contentRef.classList.remove("bg-info-card");
@@ -58,14 +57,12 @@ function getSelectetPokemonWithFilter(pokemonIndex) {
 }
 
 function getPkmInfos(pokemon) {
-    let typeForChart = pokemon.types[0].type.name;
+    let id = pokemon.id
     let img =
         pokemon.sprites.other.dream_world.front_default ||
         pokemon.sprites.other.home.front_default ||
         pokemon.sprites.other.showdown.front_default;
-
-    getStat(pokemon);
-    updateColorSpiderChart(typeForChart);
+    showStats(id)
     renderInfosInOvererlay(pokemon, img);
     showFlavourText(pokemon);
 }
@@ -80,7 +77,6 @@ function renderInfosInOvererlay(pokemon, img) {
 function nextPkm(pokemonIndex) {
     pokemonIndex++;
     displayChoosenPokemon(pokemonIndex);
-    restoreCheckboxStatus();
 }
 
 function prevPkm(pokemonIndex) {
@@ -90,7 +86,6 @@ function prevPkm(pokemonIndex) {
         pokemonIndex--;
     }
     displayChoosenPokemon(pokemonIndex);
-    restoreCheckboxStatus();
 }
 
 async function showFlavourText(pokemon) {

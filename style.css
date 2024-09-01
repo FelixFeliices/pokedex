@@ -1,57 +1,104 @@
-@font-face {
-    font-family: roboto;
-    src: url(./fonts/Raleway/Raleway-VariableFont_wght.ttf);
-}
-
-* {
-    scroll-behavior: smooth;
-    font-family: roboto;
-    /* font-weight: 500; */
-}
-
-main {
-    flex: 1;
-    max-width: 1440px;
-}
-
-.column {
-    flex-direction: column;
-}
-
-.icon {
-    height: 40px;
-    width: 40px;
-}
-
-#content {
-    gap: 64px;
-}
-
-.pointer:hover {
-    cursor: pointer;
-}
-
-.transparent {
-    color: transparent !important;
-}
-
-#content {
-    margin: 8px;
-    margin-top: 120px;
-}
-
-@media (max-width: 467px) {
-    .headline {
-        display: none;
-    }
-    .search {
-        flex-direction: column-reverse;
-        height: 77px !important;
-    }
-    #header-container {
-        align-items: flex-start !important;
-    }
-    #drop-down-1 {
-        padding-left: 0;
-    }
-}
+                    @font-face {
+                        font-family: roboto;
+                        src: url(./fonts/Raleway/Raleway-VariableFont_wght.ttf);
+                    }
+                    
+                    * {
+                        scroll-behavior: smooth;
+                        font-family: roboto;
+                    }
+                    
+                    main {
+                        flex: 1;
+                        max-width: 1440px;
+                    }
+                    
+                    .column {
+                        flex-direction: column;
+                    }
+                    
+                    p {
+                        margin: 0;
+                    }
+                    
+                    .icon {
+                        height: 40px;
+                        width: 40px;
+                    }
+                    
+                    #content {
+                        gap: 64px;
+                    }
+                    
+                    .pointer:hover {
+                        cursor: pointer;
+                    }
+                    
+                    .transparent {
+                        color: transparent !important;
+                    }
+                    
+                    #content {
+                        margin: 8px;
+                        margin-top: 120px;
+                    }
+                    
+                    @media (max-width: 523px) {
+                        #spider-chart {
+                            height: 75% !important;
+                        }
+                    }
+                    
+                    @media (max-width: 467px) {
+                        .headline {
+                            display: none;
+                        }
+                        .search {
+                            flex-direction: column-reverse;
+                            height: 77px !important;
+                        }
+                        #header-container {
+                            align-items: flex-start !important;
+                        }
+                        #drop-down-1 {
+                            padding-left: 0;
+                        }
+                        #overlayer {
+                            padding: 0 20px !important;
+                        }
+                        #spider-chart {
+                            height: 80% !important;
+                        }
+                    }
+                    
+                    @media (max-width: 430px) {
+                        .btn-group {
+                            flex-direction: column;
+                            gap: 8px;
+                        }
+                        .font-14 {
+                            font-size: 14px !important;
+                        }
+                        #detail-info {
+                            font-size: 14px;
+                            height: unset;
+                        }
+                        #pokemon-name-id {
+                            font-size: 16px;
+                        }
+                        #pokemon-img {
+                            width: 186px !important;
+                            height: 160px !important;
+                        }
+                        #stats-table {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        }
+                        #overlayer {
+                            padding: 0 8px !important;
+                        }
+                        .card-body {
+                            padding: 8px !important;
+                        }
+                    }
