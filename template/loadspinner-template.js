@@ -26,5 +26,5 @@ function loadSpinner() {
 
 </div>
 
-<span id="text"></span>`;
+<span id="text" class="text-center"></span>`;
 }

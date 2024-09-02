@@ -70,8 +70,8 @@ function getPkmInfos(pokemon) {
 function renderInfosInOvererlay(pokemon, img) {
     document.getElementById("pokemon-name-id").innerHTML = "#" + pokemon.id + " " + pokemon.name.toUpperCase();
     document.getElementById("pokemon-img").src = img;
-    document.getElementById("weight").innerHTML = "Gewicht:" + pokemon.weight + " Kg";
-    document.getElementById("height").innerHTML = "Größe: " + pokemon.height + " Meter";
+    document.getElementById("weight").innerHTML = "Gewicht:" + pokemon.weight;
+    document.getElementById("height").innerHTML = "Größe: " + pokemon.height;
 }
 
 function nextPkm(pokemonIndex) {

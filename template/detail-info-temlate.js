@@ -2,14 +2,14 @@ function detailInfoTemplate(pokemonIndex, id) {
     return `<div id="detail-info" class="card detail-info" onclick="event.stopPropagation()">
     <div class="card-body align-middle">
     <div onclick="closeDetailInfo(event)" id="close-button"class="position-absolute pointer">X</div>
-        <div id="pokemon-name-id" class="row justify-content-center mb-2"></div>
+        <div id="pokemon-name-id" class="text-center mb-2"></div>
         <div class="d-flex justify-content-center align-items-center w-100 gap-3">
             <div onclick="prevPkm(${pokemonIndex})" class="btn" id="prev">Prev</div>
             <img id="pokemon-img" src="" alt="Pokemon Bild" />
             <div onclick="nextPkm(${pokemonIndex})" class="btn" id="next">Next</div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex justify-content-between align-items-center text-center w-100">
             <span id="weight"></span><span id="height"></span>
             <button class="btn font-14 " onclick="playCries(${pokemonIndex})">Sound Abspielen</button>
             <audio id="audio1" style="display: none"></audio>
