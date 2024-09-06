@@ -46,7 +46,7 @@ function displayStatsValuesInTable(stats) {
 }
 
 function displayStatsValuesInChart(stats) {
-    const maxValue = 160;
+    const maxValue = 250;
     const points = calculatePoints(stats, maxValue);
     const polygon = document.getElementById("data-polygon");
     polygon.setAttribute("points", points);
@@ -70,6 +70,7 @@ function displayStatsValuesInChart(stats) {
         textElement.parentNode.appendChild(valueElement);
     });
 }
+
 
 function calculatePoints(stats, maxValue) {
     const angle = (2 * Math.PI) / 6; // 360° / 6 = 60° pro Abschnitt
@@ -112,7 +113,6 @@ function restoreCheckboxStatus() {
     const statsTable = document.getElementById("stats-table");
     const spiderChart = document.getElementById("spider-chart-container");
     const checkbox = document.getElementById("flexSwitchCheckDefault");
-
 
     checkbox.checked = checkboxStatus;
 

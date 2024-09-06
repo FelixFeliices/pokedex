@@ -1,17 +1,18 @@
 function renderTable(statName, statValue) {
     return `  
-<div class="d-flex mb-2 w-100">
-  <div id="statName">${statName}:</div>
-  <div class="progress w-100">
-       <div class="progress-bar progress-bar-striped progress-bar-animated text-start" role="progressbar" style="width: ${statValue * 0.7}%">
+    <div class="d-flex mb-2 w-100">
+      <div id="statName">${statName}:</div>
+      <div class="progress w-100">
+        <div class="progress-bar progress-bar-striped progress-bar-animated text-start" role="progressbar" style="width: ${statValue * 0.7}%">
            <div class="ms-2"> ${statValue}</div>
+        </div>
       </div>
-  </div>
-</div>`;
+    </div>`;
 }
 
 function renderSpiderCart() {
-    return `<svg id="spider-chart" class="h-100" viewBox="-178 -110 300 230" xmlns="http://www.w3.org/2000/svg">
+    return `
+    <svg id="spider-chart" viewBox="-178 -110 300 230" xmlns="http://www.w3.org/2000/svg">
     <!-- Maximalwert Rahmen -->
     <polygon
       points="100,0 50,86.6 -50,86.6 -100,0 -50,-86.6 50,-86.6"
@@ -40,7 +41,8 @@ function renderSpiderCart() {
 }
 
 function renderStatsContainer() {
-    return `<div id="stats-table" class="d-none w-100 mt-2"></div>   
-    <div id="spider-chart-container"></div>`
+    return `
+    <div id="stats-table" class="d-none w-100 mt-2"></div>   
+    <div id="spider-chart-container" class="d-flex justify-content-center align-items-center w-100"></div>`
 
 }

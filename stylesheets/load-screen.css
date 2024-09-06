@@ -16,8 +16,9 @@
     height: 170px;
 }
 
-.container svg {
-    position: absolute;
+#spinner-svg {
+    width: 200px;
+    height: 200px;
     top: 0;
     left: 0;
 }

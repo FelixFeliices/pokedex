@@ -6,13 +6,17 @@ function filterPkmName() {
         prepareFilteredPokemons(filteredPokemons);
         $(".dropdown-menu").removeClass("show");
         hideText();
+        disableLoadBtn()
     }
     if (inputRef.length <= 2) {
         showText();
         init();
+        enableLoadBtn()
     }
     if (checkLenghtEqualZero(inputRef)) {
         hideText();
+        enableLoadBtn()
+
     }
 }
 
@@ -29,16 +33,18 @@ function filterPkmType(parameter) {
     let typeRef = parameter.toLowerCase();
     let filteredPokemons = fullPokedex.filter((pokemon) => {
         filterActive = true;
+
         for (let i = 0; i < pokemon.types.length; i++) {
             if (pokemon.types[i].type.name.toLowerCase().includes(typeRef)) {
                 return true;
             }
+
         }
         return false;
     });
-
-    prepareFilteredPokemons(filteredPokemons);
     closeDropDown();
+    prepareFilteredPokemons(filteredPokemons);
+
 }
 
 function prepareFilteredPokemons(pokemons) {
@@ -67,6 +73,7 @@ function closeDropDown() {
     $("#drop-down-2").dropdown("toggle");
     document.getElementById("drop-down-2").setAttribute("aria-expanded", false);
     enableLoadBtn();
+    hideLoadMore()
 }
 
 function hideLoadMore() {

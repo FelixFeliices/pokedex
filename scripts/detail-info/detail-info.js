@@ -3,31 +3,33 @@ let audioURL = "";
 function openDetailInfo(event) {
     let headertRef = document.getElementById("header");
     let contentRef = document.getElementById("content");
-    let footerRef = document.getElementById("footer");
     let overlayerRef = document.getElementById("overlayer");
     let buttonRef = document.getElementById("load-more-btn");
-
-    headertRef.classList.add("d-none");
-    footerRef.classList.add("d-none");
-    contentRef.classList.add("bg-info-card");
+    let bodyRef = document.getElementById("body")
     overlayerRef.classList.remove("d-none");
+    headertRef.classList.add("d-none");
+    contentRef.classList.add("mt-2");
     buttonRef.classList.add("d-none");
-
+    bodyRef.classList.add("overflow-hidden")
     event.stopPropagation();
+
 }
 
 function closeDetailInfo(event) {
     let headertRef = document.getElementById("header");
     let contentRef = document.getElementById("content");
-    let footerRef = document.getElementById("footer");
     let overlayerRef = document.getElementById("overlayer");
     let buttonRef = document.getElementById("load-more-btn");
+    let bodyRef = document.getElementById("body")
     if (!event.target.closest("#detail-info") || event.target.closest("#close-button")) {
         headertRef.classList.remove("d-none");
-        footerRef.classList.remove("d-none");
-        contentRef.classList.remove("bg-info-card");
-        overlayerRef.classList.add("d-none");
+        contentRef.classList.remove("mt-2");
         buttonRef.classList.remove("d-none");
+        bodyRef.classList.remove("overflow-hidden")
+        overlayerRef.classList.add("d-none");
+        if (filterActive) {
+            hideLoadMore()
+        } else showLoadMore()
     }
 }
 
@@ -70,8 +72,8 @@ function getPkmInfos(pokemon) {
 function renderInfosInOvererlay(pokemon, img) {
     document.getElementById("pokemon-name-id").innerHTML = "#" + pokemon.id + " " + pokemon.name.toUpperCase();
     document.getElementById("pokemon-img").src = img;
-    document.getElementById("weight").innerHTML = "Gewicht:" + pokemon.weight;
-    document.getElementById("height").innerHTML = "Größe: " + pokemon.height;
+    document.getElementById("weight").innerHTML = "Weight: " + pokemon.weight;
+    document.getElementById("height").innerHTML = "Height: " + pokemon.height;
 }
 
 function nextPkm(pokemonIndex) {

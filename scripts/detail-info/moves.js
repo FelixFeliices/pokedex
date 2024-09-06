@@ -6,7 +6,7 @@ function showMoves(id) {
 
 function createMoveContainer() {
     const containerRef = document.getElementById("container");
-    containerRef.innerHTML = ` <div class="d-flex justify-content-around flex-wrap overflow-auto gap-1 mt-2" id="moves-container"></div>`;
+    containerRef.innerHTML = moveContainerTemplate();
 }
 
 async function getMove(id) {
@@ -15,6 +15,6 @@ async function getMove(id) {
     for (const move of moves) {
         let moveName = move.move.name.toUpperCase();
         let container = document.getElementById("moves-container");
-        container.innerHTML += `<div class="move w-25 text-center border border-success p-2 mb-2 border-opacity-25 rounded-pill">${moveName}</div>`;
+        container.innerHTML += moveTemplate(moveName);
     }
 }

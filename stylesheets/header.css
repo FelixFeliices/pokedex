@@ -1,20 +1,26 @@
 header {
-    padding: 16px 8px 0px 8px;
-    background-color: white;
+    padding: 16px 16px 0px 8px;
+    background: linear-gradient(90deg, rgb(250, 0, 0), rgb(253, 116, 116));
     box-shadow: 0px 5px 8px 3px rgba(0, 0, 0, 0.2);
+}
+
+#input {
+    background-color: rgb(15, 99, 255);
+    border-radius: 5px;
+    border: unset;
+    padding: 7px;
+}
+
+#input::placeholder {
+    color: white;
 }
 
 #input-message {
     font-size: 10px;
-    color: rgb(255 63 63);
 }
 
 .search {
     height: 45px;
-}
-
-#drop-down-1 {
-    padding-top: 0;
 }
 
 .pokeball {

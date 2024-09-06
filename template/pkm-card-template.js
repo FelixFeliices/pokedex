@@ -8,6 +8,5 @@ function renderPkmCard(pokemonIndex) {
                    <img id="pokemon-second-type-img${pokemonIndex}" class="icon" src="" alt="Bild" />
                    </div>
                 </div>
-                  
             </div>`;
 }
