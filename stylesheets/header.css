@@ -28,3 +28,16 @@ header {
 .pokeball {
     height: 64px;
 }
+
+#dropdown-types::-webkit-scrollbar {
+    width: 4px;
+}
+
+#dropdown-types::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 2px;
+}
+
+#dropdown-types::-webkit-scrollbar-track {
+    background: #ffffff;
+}
