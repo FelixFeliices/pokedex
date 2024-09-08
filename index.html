@@ -26,7 +26,6 @@
     <script src="./scripts//detail-info/evolution-chain.js"></script>
     <script src="./scripts//detail-info/appearance.js"></script>
     <script src="./scripts//detail-info/moves.js"></script>
-    <script src="./audio/audio.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -35,7 +34,7 @@
 <body id="body" onclick="closeDetailInfo(event)" onload="init()" class="d-flex column align-items-center width-100 vh-100">
     <header id="header" class="d-flex fixed-top w-100">
         <div id="header-container" class="d-flex justify-content-between align-items-center w-100">
-            <div onclick="init()" class="d-flex align-items-start">
+            <div onclick="init(), resetInput()" class="d-flex align-items-start pointer">
                 <img class="pokeball" src="./img/icon/header-responsive.png">
                 <img id="headline" class="align-self-start" src="./img/icon/pokedex2.png" alt="">
             </div>
@@ -55,7 +54,7 @@
                   Search Pokemon by Type
                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a onclick=" filterPkmType('bug'),  hideLoadMore()" class="dropdown-item" href="#">Bug</a></li>
+                                    <li><a onclick=" filterPkmType('bug')" class="dropdown-item" href="#">Bug</a></li>
                                     <li><a onclick="filterPkmType('dark')" class="dropdown-item" href="#">Dark</a></li>
                                     <li><a onclick="filterPkmType('dragon')" class="dropdown-item" href="#">Dragon</a></li>
                                     <li><a onclick="filterPkmType('electric')" class="dropdown-item" href="#">Electric</a></li>
@@ -112,7 +111,9 @@
         <div id="load-screen" class="d-flex column justify-content-center align-items-center mb-2"></div>
         <!-- Load-Screen Ende -->
 
-        <button class="btn btn-primary w-25" id="load-more-btn" onclick="loadPokemons()">LOAD MORE</button>
+        <button class="btn btn-primary d-flex align-items-center justify-content-center" id="load-more-btn" onclick="loadPokemons()">LOAD MORE
+            <img src="./img/pokeball-loadmore.png" alt="">
+        </button>
     </main>
 
 </body>

@@ -26,10 +26,6 @@
                         width: 40px;
                     }
                     
-                    #content {
-                        gap: 64px;
-                    }
-                    
                     .pointer:hover {
                         cursor: pointer;
                     }
@@ -41,9 +37,16 @@
                     #content {
                         margin: 8px;
                         margin-top: 120px;
+                        gap: 64px;
+                        min-width: 360px;
                     }
                     
                     #load-more-btn {
                         font-weight: 700;
                         font-size: 19px;
+                        width: 214px;
+                    }
+                    
+                    #load-more-btn img {
+                        width: 25%;
                     }

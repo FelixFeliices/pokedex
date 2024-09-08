@@ -19,11 +19,14 @@
     z-index: -1;
     gap: 80px;
     width: 96%;
-    overflow: hidden;
 }
 
 .opacity {
     opacity: 0.15;
+}
+
+#pokemon-name-id {
+    font-weight: 700;
 }
 
 #pokemon-img {

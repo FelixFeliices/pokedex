@@ -5,6 +5,7 @@ header {
 }
 
 #input {
+    color: white;
     background-color: rgb(15, 99, 255);
     border-radius: 5px;
     border: unset;
@@ -16,6 +17,7 @@ header {
 }
 
 #input-message {
+    color: white;
     font-size: 10px;
 }
 

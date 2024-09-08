@@ -2,7 +2,7 @@ function detailInfoTemplate(pokemonIndex, id) {
     return `
     <div id="detail-info" class="card overflow-hidden detail-info" onclick="event.stopPropagation()">
       <div class="d-flex column  card-body align-middle">
-        <div class="bg-img-container position-absolute d-flex justify-content-center">
+        <div class="bg-img-container position-absolute d-flex justify-content-center overflow-hidden">
             <img class="opacity" src="./img/bg-img-pokeball.png" />
             <img class="opacity" src="./img/bg-img-pokeball.png" />
         </div>
@@ -26,7 +26,7 @@ function detailInfoTemplate(pokemonIndex, id) {
             <div class="btn-group">
                 <a onclick="showStats(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Stats</>
                 <a onclick="showEvolutionChain(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Evolution Chain</a>
-                <a onclick="showAppearance(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Erscheinungen</a>
+                <a onclick="showAppearance(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Appearance</a>
                 <a onclick="showMoves(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Moves</a>
             </div>
             <div id="switch" class="form-check form-switch">
