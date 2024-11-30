@@ -1,5 +1,5 @@
 function loadSpinner() {
-    return `
+  return /*html*/ `
   <div class="container">
   <img class="position-absolute" id="load-spinner" src="./img/icon/loadspinner.png" alt="Lädt...">
   <svg class="position-absolute" id="spinner-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -26,5 +26,5 @@ function loadSpinner() {
 
 </div>
 
-<span id="text" class="text-center"></span>`;
+<span id="text" class="text-center retro-font"></span>`;
 }

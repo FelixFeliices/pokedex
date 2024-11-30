@@ -1,6 +1,9 @@
 .bug {
   background-color: #a6b91a;
   fill: #a6b91a;
+  background-image: url(./img/icon/icon-types/bug.webp);
+  background-position: center;
+  object-fit: cover;
 }
 
 .dark {

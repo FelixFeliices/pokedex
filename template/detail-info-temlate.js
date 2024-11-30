@@ -1,12 +1,12 @@
 function detailInfoTemplate(pokemonIndex, id) {
-    return `
-    <div id="detail-info" class="card overflow-hidden detail-info" onclick="event.stopPropagation()">
+  return /*html*/ `
+    <div id="detail-info" class="card overflow-x-hidden overflow-y-auto detail-info" onclick="event.stopPropagation()">
       <div class="d-flex column  card-body align-middle">
         <div class="bg-img-container position-absolute d-flex justify-content-center overflow-hidden">
             <img class="opacity" src="./img/bg-img-pokeball.png" />
             <img class="opacity" src="./img/bg-img-pokeball.png" />
         </div>
-        <div onclick="closeDetailInfo(event)" id="close-button" class="position-absolute pointer">X</div>
+        <div onclick="toogleDetailInfo(event)" id="close-button" class="position-absolute pointer">X</div>
         <div id="pokemon-name-id" class="text-center mb-2"></div>
         <div class="d-flex justify-content-center align-items-center w-100 gap-3">
             <div onclick="prevPkm(${pokemonIndex})" class="btn" id="prev"><img src="./img/icon/prev-arrow.svg" alt="prev"></div>
@@ -15,12 +15,12 @@ function detailInfoTemplate(pokemonIndex, id) {
         </div>
 
         <div class="d-flex justify-content-between align-items-center text-center w-100">
-            <span id="weight"></span><span id="height"></span>
+            <span id="weight" class="retro-font"></span><span id="height" class="retro-font"></span>
             <button class="btn font-14 p-0 " onclick="playCries(${pokemonIndex})"><img id="play-icon" src="./img/icon/play.svg" alt="Play Sound"></button>
             <audio id="audio1" style="display: none"></audio>
         </div>
 
-        <div id="flavour-container" class="d-flex justify-content-between align-items-center w-100 text-wrap mb-2"></div>
+        <div id="flavour-container" class="d-flex justify-content-between align-items-center w-100 text-wrap mb-2 retro-font"></div>
 
         <div class="d-flex column justify-content-center w-100 mb-1">
             <div class="btn-group">
@@ -43,7 +43,7 @@ function detailInfoTemplate(pokemonIndex, id) {
 }
 
 function appearanceContainerTemplate() {
-    return `
+  return /*html*/ `
   <div class="d-flex wrap justify-content-center mt-2">
     <div class="d-flex">
         <div><img class="appearance" id="front_default" src=""/></div>
@@ -65,11 +65,11 @@ function appearanceContainerTemplate() {
         <div><img class="appearance" id="showdownFrontShiny" src=""/></div>
         <div><img class="appearance" id="showdownBackShiny" src="" /></div>
     </div>
-  </div>`
+  </div>`;
 }
 
 function evolutionChainContainerTemplate() {
-    return `
+  return /*html*/ `
    <div class="d-flex align-items-center">
     <div id="evo-container" class="d-flex align-items-start gap-1 w-100">
         <div class="d-flex align-items-center gap-1">
@@ -82,44 +82,44 @@ function evolutionChainContainerTemplate() {
         </div>
         <div id="evo-container-second-evo" class="d-flex align-items-center justify-center"></div>
       </div>
-    </div>`
+    </div>`;
 }
 
 function baseEvoTemplate(img, name) {
-    return `  
+  return /*html*/ `  
       <div class="d-flex align-items-center column pointer">
         <img class="chain" src="${img}" alt="Image of${name}" />
         <span>${name}</span>
-      </div>`
+      </div>`;
 }
 
 function firstEvoTemplate(img, name) {
-    return `
+  return /*html*/ `
       <div class="d-flex align-items-center column">
         <img class="chain" src="${img}" alt="Image of ${name}" />
         <span>${name}</span>
-      </div>`
+      </div>`;
 }
 
 function secondEvoTemplate(img, name) {
-    return `
+  return /*html*/ `
     <div class="d-flex align-items-center column">
       <img class="chain" src="${img}" alt="Image of${name}" />
       <span>${name}</span>
-    </div>`
+    </div>`;
 }
 
 function arrowTemplate(evolutionTriggerName, levelUpRequerment) {
-    return `
+  return /*html*/ `
     <img class="arrow" src="./img/icon/right-arrow.png" alt="arrow" />
     <span>${evolutionTriggerName}</span>
-    <span>${levelUpRequerment}</span>`
+    <span>${levelUpRequerment}</span>`;
 }
 
 function moveContainerTemplate() {
-    return `<div class="d-flex justify-content-around flex-wrap overflow-y-auto overflow-x-hidden gap-1 mt-2" id="moves-container"></div>`
+  return /*html*/ `<div class="d-flex justify-content-around flex-wrap overflow-y-auto overflow-x-hidden gap-1 mt-2" id="moves-container"></div>`;
 }
 
 function moveTemplate(moveName) {
-    return `<div class="move d-flex justify-content-center align-items-center w-25 text-center border border-success p-2 mb-2 border-opacity-25 rounded-pill">${moveName}</div>`
+  return /*html*/ `<div class="move d-flex justify-content-center align-items-center w-25 text-center border border-success p-2 mb-2 border-opacity-25 rounded-pill">${moveName}</div>`;
 }

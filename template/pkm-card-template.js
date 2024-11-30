@@ -1,5 +1,5 @@
 function renderPkmCard(pokemonIndex) {
-    return `<div id="pokemon-card-${pokemonIndex}" onclick="openDetailInfo(event), displayChoosenPokemon(${pokemonIndex})" class="card shadow mb-5 rounded pokemon-card">
+  return /*html*/ `<div id="pokemon-card-${pokemonIndex}" onclick="toogleDetailInfo(event), displayChoosenPokemon(${pokemonIndex})" class="card shadow mb-5 rounded pokemon-card">
                 <div class="card-body d-flex column align-items-center justify-content-center pointer gap-3">
                   <span class="position-absolute name" id="id_name${pokemonIndex}"></span>
                   <img class="pokemonImg" id="pokemon-img${pokemonIndex}" src="" alt="Bild" />
