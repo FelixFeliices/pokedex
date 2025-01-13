@@ -1,92 +1,145 @@
+/* CSS for Pokemon types */
+
+.bug::before {
+  background-image: url('./../img/icon/icon-types/bug.webp');
+}
+
 .bug {
-  background-color: #a6b91a;
   fill: #a6b91a;
-  background-image: url(./img/icon/icon-types/bug.webp);
-  background-position: center;
-  object-fit: cover;
+}
+
+.dark::before {
+  background-image: url('./../img/icon/icon-types/dark.webp');
 }
 
 .dark {
-  background-color: #705746;
   fill: #705746;
 }
 
+.dragon::before {
+  background-image: url('./../img/icon/icon-types/dragon.webp');
+}
+
 .dragon {
-  background-color: #6f35fc;
   fill: #6f35fc;
 }
 
+.electric::before {
+  background-image: url('./../img/icon/icon-types/electric.webp');
+}
+
 .electric {
-  background-color: #f7d02c;
   fill: #f7d02c;
 }
 
+.fairy::before {
+  background-image: url('./../img/icon/icon-types/fairy.webp');
+}
+
 .fairy {
-  background-color: #d685ad;
   fill: #d685ad;
 }
 
+.fighting::before {
+  background-image: url('./../img/icon/icon-types/fighting.webp');
+}
+
 .fighting {
-  background-color: #c22e28;
   fill: #c22e28;
 }
 
+.fire::before {
+  background-image: url('./../img/icon/icon-types/fire.webp');
+}
+
 .fire {
-  background-color: #ee8130;
   fill: #ee8130;
 }
 
+.flying::before {
+  background-image: url('./../img/icon/icon-types/flying.webp');
+}
+
 .flying {
-  background-color: #a98ff3;
   fill: #a98ff3;
 }
 
+.ghost::before {
+  background-image: url('./../img/icon/icon-types/ghost.webp');
+}
+
 .ghost {
-  background-color: #735797;
   fill: #735797;
 }
 
+.grass::before {
+  background-image: url('./../img/icon/icon-types/grass.webp');
+}
+
 .grass {
-  background-color: #7ac74c;
   fill: #7ac74c;
 }
 
+ground::before {
+  background-image: url('./../img/icon/icon-types/ground.webp');
+}
+
 .ground {
-  background-color: #e2bf65;
   fill: #e2bf65;
 }
 
+.ice::before {
+  background-image: url('./../img/icon/icon-types/ice.webp');
+}
+
 .ice {
-  background-color: #96d9d6;
   fill: #96d9d6;
 }
 
+.normal::before {
+  background-image: url('./../img/icon/icon-types/normal.webp');
+}
+
 .normal {
-  background-color: #a8a77a;
   fill: #a8a77a;
 }
 
+.poison::before {
+  background-image: url('./../img/icon/icon-types/poison.webp');
+}
+
 .poison {
-  background-color: #a33ea1;
   fill: #a33ea1;
 }
 
+.psychic::before {
+  background-image: url('./../img/icon/icon-types/psychic.webp');
+}
+
 .psychic {
-  background-color: #f95587;
   fill: #f95587;
 }
 
+.rock::before {
+  background-image: url('./../img/icon/icon-types/rock.webp');
+}
+
 .rock {
-  background-color: #b6a136;
   fill: #b6a136;
 }
 
+.steel::before {
+  background-image: url('./../img/icon/icon-types/steel.webp');
+}
+
 .steel {
-  background-color: #b7b7ce;
   fill: #b7b7ce;
 }
 
+.water::before {
+  background-image: url('./../img/icon/icon-types/water.webp');
+}
+
 .water {
-  background-color: #6390f0;
   fill: #6390f0;
 }

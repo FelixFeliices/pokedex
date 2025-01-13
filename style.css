@@ -13,9 +13,18 @@
   font-family: roboto;
 }
 
+body {
+  background-image: url(./img/pokeball-bg.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 main {
   flex: 1;
   max-width: 1440px;
+
 }
 
 .column {
