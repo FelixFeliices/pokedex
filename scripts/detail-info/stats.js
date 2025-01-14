@@ -1,24 +1,20 @@
-// Global variable to track the checkbox status (table or chart view)
 let checkboxStatus = false;
 
 // Main function to display the stats of a Pokémon based on its ID
-async function showStats(id) {
-    // Fetch the Pokémon from either fullPokedex or chunkedPokedex
-    let pokemon = await fullPokedex[id] || await chunkedPokedex[id];
-    let stats = pokemon.stats;
-    resetContainer(); // Reset and prepare the container for displaying stats
-    displayStatsValuesInChart(stats); // Display stats values in a spider chart
-    displayStatsValuesInTable(stats); // Display stats values in a table format
-    updateColorSpiderChart(pokemon); // Update the spider chart colors based on the Pokémon's type
+async function showStats() {
+    resetContainer();
+    displayStatsValuesInChart(currentPokemon.stats);
+    displayStatsValuesInTable(currentPokemon.stats);
+    updateColorSpiderChart();
 }
 
 // Resets the container and prepares it for the stats display
 function resetContainer() {
-    clearContainer(); // Clear the current content of the container
-    showToggleButton(); // Show the toggle button to switch between table and chart view
-    createStatsContainer(); // Create the container to display stats
-    createSpiderChart(); // Create the spider chart layout
-    restoreCheckboxStatus(); // Restore the view (table or chart) based on previous checkbox status
+    clearContainer();
+    showToggleButton();
+    createStatsContainer();
+    createSpiderChart();
+    restoreCheckboxStatus();
 }
 
 // Shows the toggle button that allows switching between chart and table view
@@ -29,13 +25,13 @@ function showToggleButton() {
 // Creates the main stats container to display both table and chart
 function createStatsContainer() {
     const containerRef = document.getElementById("container");
-    containerRef.innerHTML = renderStatsContainer(); // Set up the stats container using a template
+    containerRef.innerHTML = renderStatsContainer();
 }
 
 // Creates the layout for the spider chart
 function createSpiderChart() {
     const containerRef = document.getElementById("spider-chart-container");
-    containerRef.innerHTML = renderSpiderCart(); // Set up the spider chart using a template
+    containerRef.innerHTML = renderSpiderCart();
 }
 
 // Displays the stats values in a table format
@@ -59,7 +55,14 @@ function displayStatsValuesInChart(stats) {
 
 // Updates the chart labels with the corresponding stat values
 function updateChartLabels(stats) {
-    const labels = ["hp", "attack", "defense", "special-attack", "special-defense", "speed"]; // Stat labels
+    const labels = [
+        "hp",
+        "attack",
+        "defense",
+        "special-attack",
+        "special-defense",
+        "speed",
+    ]; // Stat labels
     labels.forEach((label) => {
         const stat = stats.find((s) => s.stat.name === label); // Find the stat for the current label
         const value = stat ? stat.base_stat : 0; // Default to 0 if stat is not found
@@ -70,21 +73,33 @@ function updateChartLabels(stats) {
 
 // Appends the stat value below the given label in the spider chart
 function appendValueToLabel(textElement, value) {
-    const valueElement = document.createElementNS("http://www.w3.org/2000/svg", "text"); // Create a new SVG text element
+    const valueElement = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+    ); // Create a new SVG text element
     valueElement.setAttribute("x", textElement.getAttribute("x")); // Set the x position to match the label
-    valueElement.setAttribute("y", parseInt(textElement.getAttribute("y")) + 12); // Adjust y position to display below the label
+    valueElement.setAttribute(
+        "y",
+        parseInt(textElement.getAttribute("y")) + 12
+    ); // Adjust y position to display below the label
     valueElement.setAttribute("font-size", "10"); // Set font size for stat value
     valueElement.setAttribute("fill", "black"); // Set text color to black
     valueElement.textContent = value; // Set the stat value as text content
     textElement.parentNode.appendChild(valueElement); // Append the stat value to the chart
 }
 
-
 // Calculates the points for the spider chart based on stats
 function calculatePoints(stats, maxValue) {
     const angle = (2 * Math.PI) / 6; // 360° divided by 6 (for each stat dimension)
     const points = [];
-    const dimensions = ["hp", "attack", "defense", "special-attack", "special-defense", "speed"];
+    const dimensions = [
+        "hp",
+        "attack",
+        "defense",
+        "special-attack",
+        "special-defense",
+        "speed",
+    ];
     for (let i = 0; i < dimensions.length; i++) {
         const stat = stats.find((s) => s.stat.name === dimensions[i]); // Get the stat value for each dimension
         const value = stat ? stat.base_stat : 0; // Default to 0 if not found
@@ -96,8 +111,8 @@ function calculatePoints(stats, maxValue) {
 }
 
 // Updates the color of the spider chart based on the Pokémon's type
-function updateColorSpiderChart(pokemon) {
-    let typeForChart = pokemon.types[0].type.name; // Get the primary type of the Pokémon
+function updateColorSpiderChart() {
+    let typeForChart = currentPokemon.types[0].type.name; // Get the primary type of the Pokémon
     let dataPolygonRef = document.getElementById("data-polygon"); // Get the spider chart polygon element
     dataPolygonRef.classList.add(typeForChart); // Add a class based on the Pokémon's type to style the chart
 }

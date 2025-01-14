@@ -80,7 +80,7 @@
   fill: #7ac74c;
 }
 
-ground::before {
+.ground::before {
   background-image: url('./../img/icon/icon-types/ground.webp');
 }
 

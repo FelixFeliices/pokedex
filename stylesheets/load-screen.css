@@ -1,11 +1,22 @@
 #load-screen {
   flex: 1;
+  background: rgba(246, 243, 243, 0.17);
+  backdrop-filter: blur(3.1px);
+  position: fixed;
+  overflow: hidden;
+  height: 100vh;
+  width: 100%;
+  z-index: 20;
+  color: white;
+  gap: 24px;
+  padding: 24px;
 }
 
 .container {
   position: relative;
   width: 200px;
   height: 200px;
+
 }
 
 #load-spinner {
@@ -14,6 +25,10 @@
   transform: translate(-50%, -50%);
   width: 170px;
   height: 170px;
+  opacity: 0.1;
+  clip-path: circle(0%);
+  transition: opacity 0.5s ease-in-out;
+
 }
 
 #spinner-svg {
@@ -23,11 +38,6 @@
   left: 0;
 }
 
-#load-screen {
-  position: fixed;
-  overflow: hidden;
-  height: 100vh;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.803);
-  z-index: 20;
+#progress-bar {
+  transition: width 0.125s ease-in-out;
 }

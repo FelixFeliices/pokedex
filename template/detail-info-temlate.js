@@ -1,33 +1,56 @@
-function detailInfoTemplate(pokemonIndex, id) {
-  return /*html*/ `
+function detailInfoTemplate() {
+    return /*html*/ `
     <div id="detail-info" class="card overflow-x-hidden overflow-y-auto detail-info" onclick="event.stopPropagation()">
-      <div class="d-flex column  card-body align-middle">
-        <div class="bg-img-container position-absolute d-flex justify-content-center overflow-hidden">
+      <div id="overlay-container" class="d-flex column card-body align-middle position-relative overflow-hidden">
+        <div class="bg-img-container position-absolute d-flex justify-content-center">
             <img class="opacity" src="./img/bg-img-pokeball.png" />
             <img class="opacity" src="./img/bg-img-pokeball.png" />
         </div>
-        <div onclick="toogleDetailInfo(event)" id="close-button" class="position-absolute pointer">X</div>
-        <div id="pokemon-name-id" class="text-center mb-2"></div>
+        <div onclick="toogleDetailInfo(event)" id="close-button" class="position-absolute pointer hover-effect">X</div>
+        <div id="pokemon-name-id" class="text-center mb-2">#${
+            currentPokemon.id
+        } ${currentPokemon.name.toUpperCase()}</div>
         <div class="d-flex justify-content-center align-items-center w-100 gap-3">
-            <div onclick="prevPkm(${pokemonIndex})" class="btn" id="prev"><img src="./img/icon/prev-arrow.svg" alt="prev"></div>
+            <div onclick="prevPkm(${
+                currentPokemon.id
+            })" class="btn hover-effect" id="prev">
+              <img src="./img/icon/prev-arrow.svg">
+            </div>
+
             <img id="pokemon-img" src="" alt="Pokemon Bild" />
-            <div onclick="nextPkm(${pokemonIndex})" class="btn" id="next"><img src="./img/icon/nxt-arrow.svg" alt="next"></div>
+
+            <div onclick="nextPkm(${
+                currentPokemon.id
+            })" class="btn hover-effect" id="next">
+              <img src="./img/icon/nxt-arrow.svg" >
+            </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center text-center w-100">
-            <span id="weight" class="retro-font"></span><span id="height" class="retro-font"></span>
-            <button class="btn font-14 p-0 " onclick="playCries(${pokemonIndex})"><img id="play-icon" src="./img/icon/play.svg" alt="Play Sound"></button>
-            <audio id="audio1" style="display: none"></audio>
+            <span class="retro-font">Weight: ${currentPokemon.weight}</span>
+            <span class="retro-font">Height: ${currentPokemon.height}</span>
+            <button class="btn font-14 p-0 hover-effect" 
+            onclick="playCries(${currentPokemon.id})">
+             <img id="play-icon" src="./img/icon/play.svg" alt="Play Sound">
+            </button>
         </div>
 
         <div id="flavour-container" class="d-flex justify-content-between align-items-center w-100 text-wrap mb-2 retro-font"></div>
 
         <div class="d-flex column justify-content-center w-100 mb-1">
             <div class="btn-group">
-                <a onclick="showStats(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Stats</>
-                <a onclick="showEvolutionChain(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Evolution Chain</a>
-                <a onclick="showAppearance(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Appearance</a>
-                <a onclick="showMoves(${id})" href="#" class="btn btn-secondary font-14 p-responive-0">Moves</a>
+                <a onclick="showStats(${
+                    currentPokemon.id
+                })" href="#" class="btn btn-secondary font-14 p-responive-0">Stats</>
+                <a onclick="showEvolutionChain(${
+                    currentPokemon.id
+                })" href="#" class="btn btn-secondary font-14 p-responive-0">Evolution Chain</a>
+                <a onclick="showAppearance(${
+                    currentPokemon.id
+                })" href="#" class="btn btn-secondary font-14 p-responive-0">Appearance</a>
+                <a onclick="showMoves(${
+                    currentPokemon.id
+                })" href="#" class="btn btn-secondary font-14 p-responive-0">Moves</a>
             </div>
             <div id="switch" class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onchange="toggleStatsView()" />
@@ -35,7 +58,7 @@ function detailInfoTemplate(pokemonIndex, id) {
             </div>
         </div>
 
-        <div id="container" class="d-flex flex-fill justify-content-center overflow-x-hidden overflow-y-auto">
+        <div id="container" class="d-flex flex-fill justify-content-center overflow-scroll">
         </div>
 
       </div>
@@ -43,7 +66,7 @@ function detailInfoTemplate(pokemonIndex, id) {
 }
 
 function appearanceContainerTemplate() {
-  return /*html*/ `
+    return /*html*/ `
   <div class="d-flex wrap justify-content-center mt-2">
     <div class="d-flex">
         <div><img class="appearance" id="front_default" src=""/></div>
@@ -69,7 +92,7 @@ function appearanceContainerTemplate() {
 }
 
 function evolutionChainContainerTemplate() {
-  return /*html*/ `
+    return /*html*/ `
    <div class="d-flex align-items-center">
     <div id="evo-container" class="d-flex align-items-start gap-1 w-100">
         <div class="d-flex align-items-center gap-1">
@@ -86,7 +109,7 @@ function evolutionChainContainerTemplate() {
 }
 
 function baseEvoTemplate(img, name) {
-  return /*html*/ `  
+    return /*html*/ `  
       <div class="d-flex align-items-center column pointer">
         <img class="chain" src="${img}" alt="Image of${name}" />
         <span>${name}</span>
@@ -94,7 +117,7 @@ function baseEvoTemplate(img, name) {
 }
 
 function firstEvoTemplate(img, name) {
-  return /*html*/ `
+    return /*html*/ `
       <div class="d-flex align-items-center column">
         <img class="chain" src="${img}" alt="Image of ${name}" />
         <span>${name}</span>
@@ -102,7 +125,7 @@ function firstEvoTemplate(img, name) {
 }
 
 function secondEvoTemplate(img, name) {
-  return /*html*/ `
+    return /*html*/ `
     <div class="d-flex align-items-center column">
       <img class="chain" src="${img}" alt="Image of${name}" />
       <span>${name}</span>
@@ -110,16 +133,16 @@ function secondEvoTemplate(img, name) {
 }
 
 function arrowTemplate(evolutionTriggerName, levelUpRequerment) {
-  return /*html*/ `
+    return /*html*/ `
     <img class="arrow" src="./img/icon/right-arrow.png" alt="arrow" />
     <span>${evolutionTriggerName}</span>
     <span>${levelUpRequerment}</span>`;
 }
 
 function moveContainerTemplate() {
-  return /*html*/ `<div class="d-flex justify-content-around flex-wrap overflow-y-auto overflow-x-hidden gap-1 mt-2" id="moves-container"></div>`;
+    return /*html*/ `<div class="d-flex justify-content-around flex-wrap gap-1 mt-2" id="moves-container"></div>`;
 }
 
 function moveTemplate(moveName) {
-  return /*html*/ `<div class="move d-flex justify-content-center align-items-center w-25 text-center border border-success p-2 mb-2 border-opacity-25 rounded-pill">${moveName}</div>`;
+    return /*html*/ `<div class="move d-flex justify-content-center align-items-center w-25 text-center border border-success p-2 mb-2 border-opacity-25 rounded-pill">${moveName}</div>`;
 }

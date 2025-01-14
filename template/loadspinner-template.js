@@ -1,10 +1,10 @@
 function loadSpinner() {
-  return /*html*/ `
+    return /*html*/ `
   <div class="container">
   <img class="position-absolute" id="load-spinner" src="./img/icon/loadspinner.png" alt="Lädt...">
   <svg class="position-absolute" id="spinner-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
   <!-- Zeichne den ersten Hintergrundkreis -->
-  <circle cx="100" cy="100" r="91" fill="none" stroke="lightgrey" stroke-width="4"/>
+  <circle cx="100" cy="100" r="91" fill="none" stroke="transparent" stroke-width="4"/>
   
   <!-- Zeichne den ersten sich füllenden Kreis -->
   <circle cx="100" cy="100" r="91" fill="none" stroke="black" stroke-width="4"
@@ -14,7 +14,7 @@ function loadSpinner() {
   </circle>
 
   <!-- Zeichne den zweiten Hintergrundkreis -->
-  <circle cx="100" cy="100" r="97" fill="none" stroke="lightgrey" stroke-width="4"/>
+  <circle cx="100" cy="100" r="97" fill="none" stroke="transparent" stroke-width="4"/>
   
   <!-- Zeichne den zweiten sich füllenden Kreis -->
   <circle cx="100" cy="100" r="97" fill="none" stroke="black" stroke-width="4"
@@ -26,5 +26,9 @@ function loadSpinner() {
 
 </div>
 
-<span id="text" class="text-center retro-font"></span>`;
+<span id="text" class="text-center retro-font"></span>
+<span id="progress" class="text-center retro-font">Pokemon geladen 
+<div class="progress">
+  <div id="progress-bar" class="progress-bar bg-danger" role="progressbar" style="width:${progress};"></div>
+</div>`;
 }

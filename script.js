@@ -1,7 +1,13 @@
 // Global variables
 
 let promError = false;
+
 let startPokemon = 0;
+let limit = 20;
+let loadedPokemons = 0;
+let fullPokedexLimit = 1025;
+let totalLoadedPokemons = 0;
+let progress = 0;
 let pokedexFillCycle = 0;
 let isFilterActive = false;
 let isLoadMoreActive = false;
@@ -9,8 +15,8 @@ let speciesArray = [];
 let chunkedPokedex = [];
 let fullPokedex = [];
 
-const BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=20`;
-const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&limit=1025`;
+let BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=${limit}`;
+const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&limit=${fullPokedexLimit}`;
 
 /**
  * This function initializes the Pokédex by clearing content, disabling the load button,
@@ -96,6 +102,7 @@ function getPokemonOverwiew(array) {
  * @param {Array} array - An array of Pokémon species data to be processed.
  */
 async function fillChunckedPokedex(array) {
+    loadedPokemons = 0;
     for (const species of array) {
         let speciesURL = species.url;
         let speciesOverwiew = await fetchData(speciesURL);
@@ -103,14 +110,16 @@ async function fillChunckedPokedex(array) {
         let pokemon = await fetchData(pokemonURl);
         let id = pokemon.id;
         chunkedPokedex[id] = pokemon;
-
+        loadedPokemons++;
         createPokemonCard(id);
         displayPokemonDetails(id, pokemon);
+        calcProgress(loadedPokemons, limit);
+        showProgress();
     }
 
     showLoadMore();
     enableLoadBtn();
-    usePromise(FULL_POKEDEX_URL);
+    await usePromise(FULL_POKEDEX_URL);
     disableDisplayLoadScreen();
 }
 
@@ -127,6 +136,15 @@ async function fillFullPokedex(array) {
         let pokemon = await fetchData(pokemonURl);
         let id = pokemon.id;
         fullPokedex[id] = pokemon;
+        totalLoadedPokemons = fullPokedex.length;
+        document.getElementById("full-progress-bar").style.width =
+            calcProgress(totalLoadedPokemons, fullPokedexLimit) + "%";
+
+        if (calcProgress(totalLoadedPokemons, fullPokedexLimit) == 100) {
+            document
+                .getElementById("progress-bar-container")
+                .classList.add("d-none");
+        }
     }
 }
 
@@ -172,11 +190,14 @@ function createPokemonCard(pokemonIndex) {
  * This function loads more Pokémon data when the "load more" button is clicked.
  */
 function loadPokemons() {
+    loadedPokemons = 0;
+    progress = 0;
     pokedexFillCycle = 0;
     startPokemon = chunkedPokedex.length - 1;
+    limit = 40;
     isLoadMoreActive = true;
-    const LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=50`;
-
+    console.log(calcProgress(limit));
+    let LOAD_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=${limit}`;
     disableLoadBtn();
     displayLoadScreen();
     usePromise(LOAD_URL);
@@ -189,10 +210,10 @@ function loadPokemons() {
  * @param {Object} pokemon - The Pokémon object containing its details.
  */
 function displayPokemonDetails(pokemonIndex, pokemon) {
-    displayNameAndId(pokemonIndex, pokemon);
-    displayImg(pokemonIndex, pokemon);
+    updateBgColor(pokemon, `pokemon-card-${pokemon.id}`);
+    displayNameAndId(pokemon);
+    displayImg(pokemon);
     displayType(pokemonIndex, pokemon);
-    updateBgColor(pokemonIndex, pokemon);
 }
 
 /**
@@ -201,8 +222,8 @@ function displayPokemonDetails(pokemonIndex, pokemon) {
  * @param {number} pokemonIndex - The index of the Pokémon in the array.
  * @param {Object} pokemon - The Pokémon object containing its name and ID.
  */
-function displayNameAndId(pokemonIndex, pokemon) {
-    let id_nameRef = document.getElementById(`id_name${pokemonIndex}`);
+function displayNameAndId(pokemon) {
+    let id_nameRef = document.getElementById(`id_name${pokemon.id}`);
     id_nameRef.innerHTML = `#${pokemon.id} ${pokemon.name.toUpperCase()}`;
 }
 
@@ -212,8 +233,8 @@ function displayNameAndId(pokemonIndex, pokemon) {
  * @param {number} pokemonIndex - The index of the Pokémon in the array.
  * @param {Object} pokemon - The Pokémon object containing its sprite data.
  */
-function displayImg(pokemonIndex, pokemon) {
-    let pokemonImgRef = document.getElementById(`pokemon-img${pokemonIndex}`);
+function displayImg(pokemon) {
+    let pokemonImgRef = document.getElementById(`pokemon-img${pokemon.id}`);
     let img =
         pokemon.sprites.other.dream_world.front_default ||
         pokemon.sprites.other.home.front_default ||
@@ -295,8 +316,8 @@ function hideEmptyType(pokemonIndex) {
  * @param {number} pokemonIndex - The index of the Pokémon in the array.
  * @param {Object} pokemon - The Pokémon object containing its type data.
  */
-function updateBgColor(pokemonIndex, pokemon) {
-    let cardRef = document.getElementById(`pokemon-card-${pokemonIndex}`);
+function updateBgColor(pokemon, ref) {
+    let cardRef = document.getElementById(ref);
     let typeForBg = pokemon.types[0].type.name;
     cardRef.classList.add(`${typeForBg}`);
 }

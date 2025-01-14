@@ -11,6 +11,22 @@
 * {
   scroll-behavior: smooth;
   font-family: roboto;
+  margin: 0;
+
+}
+
+::-webkit-scrollbar {
+  height: 100%;
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c82222;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 body {
@@ -29,10 +45,6 @@ main {
 
 .column {
   flex-direction: column;
-}
-
-p {
-  margin: 0;
 }
 
 .icon {
@@ -54,6 +66,7 @@ p {
   margin-top: 120px;
   gap: 64px;
   min-width: 360px;
+  color: white;
 }
 
 #load-more-btn {
@@ -69,4 +82,27 @@ p {
 .retro-font {
   font-family: retro;
   font-size: 10px;
+}
+
+.hover-effect {
+  transition: all 0.125s ease-in-out;
+}
+
+.hover-effect:hover {
+  scale: 1.2;
+}
+
+.animation-fade-in {
+  animation: fadeIn 1.125s 1 forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

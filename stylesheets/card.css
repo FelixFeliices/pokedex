@@ -6,14 +6,22 @@
     background: transparent;
     transition: all 0.125s ease-in;
     cursor: pointer;
+    /* animation: fadeIn 1.125s 1 forwards; */
+
 }
+
 
 .pokemon-card:hover {
     filter: brightness(1.4);
     scale: 1.1;
 }
 
-.pokemon-card:before {
+.pokemon-card:hover .pokemonImg {
+    scale: 1.2;
+}
+
+.pokemon-card:before,
+.detail-info:before {
     content: '';
     position: absolute;
     top: 0;
@@ -42,7 +50,7 @@
     width: 180px;
     height: 180px;
     z-index: 10;
-    transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
+    transition: all 0.125s ease-in-out;
     filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.7));
 }
 

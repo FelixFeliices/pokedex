@@ -1,17 +1,26 @@
 .detail-info-bg {
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.7);
   padding: 0 40px;
   z-index: 100;
+  background: rgba(0, 0, 0, 0.17);
+  backdrop-filter: blur(3.1px);
 }
 
 .detail-info {
-  background: linear-gradient(0deg, rgb(124, 230, 241), rgb(255, 255, 255));
+  /* background: linear-gradient(0deg, rgb(124, 230, 241), rgb(255, 255, 255)); */
   height: 88vh;
   max-height: 800px;
   width: 550px;
   z-index: -2;
+}
+
+.detail-info::before {
+  opacity: 1;
+}
+
+.card {
+  background: initial;
 }
 
 .bg-img-container {
@@ -45,27 +54,9 @@
   height: 24px;
 }
 
+
 #play-icon {
   width: 40px;
-}
-
-#container::-webkit-scrollbar,
-#moves-container::-webkit-scrollbar,
-#detail-info::-webkit-scrollbar {
-  width: 4px;
-}
-
-#container::-webkit-scrollbar-thumb,
-#moves-container::-webkit-scrollbar-thumb,
-#detail-info::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 2px;
-}
-
-#container::-webkit-scrollbar-track,
-#moves-container::-webkit-scrollbar-track,
-#detail-info::-webkit-track {
-  background: #f1f1f100;
 }
 
 .chain {
