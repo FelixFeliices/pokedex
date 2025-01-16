@@ -5,14 +5,15 @@
   z-index: 100;
   background: rgba(0, 0, 0, 0.17);
   backdrop-filter: blur(3.1px);
+  max-height: 100%;
 }
 
 .detail-info {
+  overflow: auto;
   animation: fadeIn 0.5s forwards ease-in-out;
-  /* background: linear-gradient(0deg, rgb(124, 230, 241), rgb(255, 255, 255)); */
-  height: 88vh;
-  max-height: 800px;
-  width: 550px;
+  width: 90%;
+  max-height: 95%;
+  max-width: 550px;
   z-index: -2;
 }
 

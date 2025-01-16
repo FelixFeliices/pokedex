@@ -1,7 +1,7 @@
 function detailInfoTemplate() {
     return /*html*/ `
     <div id="detail-info" class="card overflow-x-hidden overflow-y-auto detail-info" onclick="event.stopPropagation()">
-      <div id="overlay-container" class="d-flex column card-body align-middle position-relative overflow-hidden">
+      <div id="overlay-container" class="d-flex column card-body align-middle position-relative overflow-auto">
         
         <div onclick="toogleDetailInfo(event)" id="close-button" class="position-absolute pointer hover-effect">X</div>
         <div id="pokemon-name-id" class="text-center mb-2">#${
@@ -55,7 +55,7 @@ function detailInfoTemplate() {
             </div>
         </div>
 
-        <div id="container" class="d-flex flex-fill justify-content-center overflow-scroll">
+        <div id="container" class="d-flex flex-fill justify-content-center">
         </div>
 
       </div>
