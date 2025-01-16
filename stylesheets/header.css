@@ -1,11 +1,10 @@
 header {
     padding: 16px 16px 0px 8px;
-    /* background: linear-gradient(90deg, rgb(250 0 0 / 70%), rgb(253 116 116 / 10%)); */
     box-shadow: 0px 5px 8px 3px rgba(0, 0, 0, 0.2);
     background-image: url("./../img/pokeball-bg.jpg");
     color: white;
-
 }
+
 
 #headline {
     filter: brightness(0) saturate(100%) invert(93%) sepia(100%) saturate(0%) hue-rotate(322deg) brightness(104%) contrast(96%);

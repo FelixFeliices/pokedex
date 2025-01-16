@@ -29,18 +29,18 @@
   background: transparent;
 }
 
-body {
+
+
+main {
+  flex: 1;
+  max-width: 1440px;
   background-image: url(./img/pokeball-bg.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-}
-
-main {
-  flex: 1;
-  max-width: 1440px;
-
+  height: 100vh;
+  max-height: 100%;
 }
 
 .column {
@@ -67,6 +67,7 @@ main {
   gap: 64px;
   min-width: 360px;
   color: white;
+
 }
 
 #load-more-btn {
@@ -93,16 +94,26 @@ main {
 }
 
 .animation-fade-in {
-  animation: fadeIn 1.125s 1 forwards;
+  animation: fadeIn ease-in-out;
+  animation-duration: 125ms;
 }
 
 @keyframes fadeIn {
   0% {
     opacity: 0;
+    filter: blur(20px);
+
+  }
+
+  50% {
+    opacity: 1;
+    filter: blur(0px);
 
   }
 
   100% {
     opacity: 1;
+    filter: blur(0px);
+
   }
 }

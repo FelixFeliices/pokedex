@@ -1,165 +1,188 @@
-let possibleFirstEvoltions = []; // Array to store first evolution stage data
-let possibleSecondEvoltions = []; // Array to store second evolution stage data
-
-// Main function to display the evolution chain for a Pokémon
-async function showEvolutionChain(pokemonId) {
-    const speciesData = await fetchPokemonSpecies(pokemonId); // Fetch species data for the Pokémon
-    const evolutionChainData = await fetchEvolutionChain(speciesData.evolution_chain.url); // Fetch the evolution chain data
-    clearArrays(); // Clear the arrays storing evolution data
-    clearContainer(); // Clear the display container
-    await createEvolutionContainer(pokemonId); // Create the container to display evolution chain
-    await getData(evolutionChainData); // Process and display evolution chain data
+/**
+ * Displays the evolution chain of the current Pokémon.
+ *
+ * @function showEvolutionChain
+ * @description Fetches the species and evolution chain data of the current Pokémon,
+ * clears the existing arrays and container, and creates the evolution container
+ * while populating it with the evolution chain data.
+ * @async
+ * @returns {Promise<void>} Resolves when the evolution chain data is successfully fetched and displayed.
+ */
+async function showEvolutionChain() {
+    let speciesData = await fetchData(currentPokemon.species.url);
+    let evolutionChainData = await fetchData(speciesData.evolution_chain.url);
+    clearArrays();
+    clearContainer();
+    await createEvolutionContainer(currentPokemon.id);
+    await getData(evolutionChainData);
 }
 
-// Clears the arrays storing possible evolutions
-function clearArrays() {
-    possibleFirstEvoltions = []; // Clear first evolution stage array
-    possibleSecondEvoltions = []; // Clear second evolution stage array
+/**
+ * Clears the arrays holding evolution stages.
+ *
+ * @function clearArrays
+ * @description Resets the arrays `possibleFirstEvoltions` and `possibleSecondEvoltions`
+ * to empty, clearing any previously stored evolution stages.
+ */ function clearArrays() {
+    possibleFirstEvoltions = [];
+    possibleSecondEvoltions = [];
 }
 
-// Function to process evolution chain data
+/**
+ * Processes and displays the evolution chain data.
+ *
+ * @function getData
+ * @param {Object} evolutionChainData - The evolution chain data containing the evolutionary stages.
+ * @description Extracts evolution data from the provided chain, fetches images for the evolutions,
+ * and displays them accordingly. It also populates the arrays for possible evolutions and calls
+ * additional functions to fetch and display subsequent evolution stages.
+ * @async
+ * @returns {Promise<void>} Resolves when the evolution data has been fully processed and displayed.
+ */
+
 async function getData(evolutionChainData) {
-    const baseEvolutionOverview = getBaseEvolutionData(evolutionChainData); // Get base evolution data (first stage)
-    const URL_FOR_IMG = baseEvolutionOverview.species.url; // URL to fetch image for base evolution
-    const img = await getEvolutionImg(URL_FOR_IMG); // Get the image for the base evolution
-    const name = baseEvolutionOverview.species.name.toUpperCase(); // Get and format base evolution name
-    let evolvesTo = baseEvolutionOverview.evolves_to; // Get the possible evolutions from the base stage
+    let baseEvolutionOverview = evolutionChainData.chain;
+    let img = await getEvolutionImg(baseEvolutionOverview.species.url);
+    let name = baseEvolutionOverview.species.name.toUpperCase();
+    baseEvolutionOverview.evolves_to.forEach((evolution) => {
+        possibleFirstEvoltions.push(evolution);
+    });
 
-    displayBaseEvo(img, name); // Display the base evolution
+    displayEvo(img, name, "base");
+    if (possibleFirstEvoltions.length > 0) await getEvolutionData("first");
+    if (possibleSecondEvoltions.length > 0) await getEvolutionData("second");
+}
 
-    // Store first stage evolutions in the array
-    for (let index = 0; index < evolvesTo.length; index++) {
-        possibleEvoltion = evolvesTo[index];
-        possibleFirstEvoltions.push(possibleEvoltion);
-    }
-
-    // If there are first stage evolutions, process them
-    if (possibleFirstEvoltions.length > 0) {
-        await getFirstEvolutionData(); // Get and display first stage evolutions
-
-        // If there are second stage evolutions, process them
-        if (possibleSecondEvoltions.length > 0) {
-            await getSecondEvolutionData(); // Get and display second stage evolutions
+/**
+ * Processes and displays evolution stage data (first or second).
+ *
+ * @function getEvolutionData
+ * @param {string} stage - The evolution stage to process ("first" or "second").
+ * @description Fetches image data, evolution triggers, and level-up requirements for the specified
+ * evolution stage. It also adds possible subsequent evolutions to the appropriate array.
+ * Displays evolution details and triggers.
+ * @async
+ * @returns {Promise<void>} Resolves when the evolution stage data has been processed and displayed.
+ */
+async function getEvolutionData(stage) {
+    let evolutions =
+        stage === "first" ? possibleFirstEvoltions : possibleSecondEvoltions;
+    for (let index = 0; index < evolutions.length; index++) {
+        let overview = evolutions[index];
+        let evolutionTriggerName = overview.evolution_details[0].trigger.name;
+        let levelUpRequerment = displayLevelUpRequirement(overview);
+        if (stage !== "second") {
+            overview.evolves_to.forEach((possibleEvoltion) => {
+                possibleSecondEvoltions.push(possibleEvoltion);
+            });
         }
+        displayArrow(stage + "-arrow", evolutionTriggerName, levelUpRequerment);
+        displayEvo(
+            await getEvolutionImg(overview.species.url),
+            overview.species.name.toUpperCase(),
+            stage + "-evo"
+        );
     }
 }
 
-// Extracts and returns the base evolution data from the evolution chain
-function getBaseEvolutionData(evolutionChainData) {
-    let baseOverwiev = evolutionChainData.chain; // Get the chain data for the base Pokémon
-    return baseOverwiev; // Return the base evolution data
+/**
+ * Determines and returns the level-up requirement for an evolution.
+ *
+ * @function displayLevelUpRequirement
+ * @param {Object} overview - The evolution overview object containing evolution details.
+ * @returns {string|number} The level-up requirement, which can either be a level number, an item name, or "n/A" if not applicable.
+ * @description This function checks the evolution details for the required level or item needed for an evolution.
+ * It first checks for a `min_level`, then an `item.name`, and returns "n/A" if neither is found.
+ */ function displayLevelUpRequirement(overview) {
+    let levelUpInfoOverview = overview.evolution_details[0];
+    if (
+        levelUpInfoOverview.min_level !== null &&
+        levelUpInfoOverview.min_level !== undefined
+    )
+        return levelUpInfoOverview.min_level;
+    else if (levelUpInfoOverview.item && levelUpInfoOverview.item.name)
+        return levelUpInfoOverview.item.name;
+    else return "n/A";
 }
 
-// Processes the first stage evolutions
-async function getFirstEvolutionData() {
-    for (let index = 0; index < possibleFirstEvoltions.length; index++) {
-        const overview = possibleFirstEvoltions[index]; // Get first evolution overview
-        const name = overview.species.name.toUpperCase(); // Get and format name
-        const evolutionTrigger = overview.evolution_details[0].trigger; // Get the evolution trigger details
-        const evolutionTriggerName = evolutionTrigger.name; // Get trigger name
-        const evolutionTriggerUrl = evolutionTrigger.url; // Get trigger URL (not used here)
-        const evolves_to = overview.evolves_to; // Get further evolutions from first stage
-        const URL_FOR_IMG = overview.species.url; // URL for the first evolution's image
-        const img = await getEvolutionImg(URL_FOR_IMG); // Fetch image for the first evolution
-        let levelUpRequerment = displayLevelUpRequirement(overview); // Get the level/item requirement for evolution
-
-        // Store second stage evolutions in the array
-        for (let index = 0; index < evolves_to.length; index++) {
-            let possibleEvoltion = evolves_to[index];
-            possibleSecondEvoltions.push(possibleEvoltion);
-        }
-
-        displayFirstEvo(img, name); // Display the first stage evolution
-        displayArrow("first-arrow", evolutionTriggerName, levelUpRequerment); // Display the arrow with evolution trigger and requirement
-    }
-}
-
-// Processes the second stage evolutions
-async function getSecondEvolutionData() {
-    for (let index = 0; index < possibleSecondEvoltions.length; index++) {
-        const overview = possibleSecondEvoltions[index]; // Get second evolution overview
-        const name = overview.species.name.toUpperCase(); // Get and format name
-        const evolutionTrigger = overview.evolution_details[0].trigger; // Get the evolution trigger details
-        const evolutionTriggerName = evolutionTrigger.name; // Get trigger name
-        const evolutionTriggerUrl = evolutionTrigger.url; // Get trigger URL (not used here)
-        const URL_FOR_IMG = overview.species.url; // URL for the second evolution's image
-        const img = await getEvolutionImg(URL_FOR_IMG); // Fetch image for the second evolution
-        let levelUpRequerment = displayLevelUpRequirement(overview); // Get the level/item requirement for evolution
-
-        displaySecondEvo(img, name); // Display the second stage evolution
-        displayArrow("second-arrow", evolutionTriggerName, levelUpRequerment); // Display the arrow with evolution trigger and requirement
-    }
-}
-
-// Gets the level or item requirement for evolution
-function displayLevelUpRequirement(overview) {
-    let levelUpInfoOverview = overview.evolution_details[0]; // Get evolution details for the overview
-
-    // Check if evolution is level-based or item-based, return the requirement
-    if (levelUpInfoOverview.min_level !== null && levelUpInfoOverview.min_level !== undefined) {
-        let levelUpLevel = levelUpInfoOverview.min_level;
-        return levelUpLevel; // Return level requirement
-    } else if (levelUpInfoOverview.item && levelUpInfoOverview.item.name) {
-        let levelUpItem = levelUpInfoOverview.item.name;
-        return levelUpItem; // Return item requirement
-    } else {
-        return "n/A"; // No requirement found
-    }
-}
-
-// Clears the container and hides the switch element
-function clearContainer() {
-    document.getElementById("container").innerHTML = ""; // Clear the container
-    document.getElementById("switch").classList.add("d-none"); // Hide the switch element
-}
-
-// Fetches Pokémon species data by Pokémon ID
-async function fetchPokemonSpecies(pokemonId) {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`); // Fetch Pokémon species data
-    return await response.json(); // Return JSON data
-}
-
-// Fetches the evolution chain from a given URL
-async function fetchEvolutionChain(evoChainURL) {
-    const response = await fetch(evoChainURL); // Fetch the evolution chain
-    return await response.json(); // Return JSON data
-}
-
-// Fetches the evolution image for a given species URL
+/**
+ * Fetches the evolution image of a Pokémon from the species URL.
+ *
+ * @function getEvolutionImg
+ * @param {string} speciesUrl - The URL of the Pokémon species to fetch evolution data.
+ * @returns {Promise<string>} A promise that resolves to the URL of the Pokémon's evolution image.
+ * @description This function fetches species data and then retrieves the Pokémon's image URL
+ * from the available sprites. If the dream world sprite is available, it is used; otherwise,
+ * the home sprite is used. If neither is available, it returns undefined.
+ * @async
+ */
 async function getEvolutionImg(speciesUrl) {
-    const speciesResponse = await fetch(speciesUrl); // Fetch species data
-    const speciesData = await speciesResponse.json(); // Parse species data
-
-    const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${speciesData.id}/`); // Fetch Pokémon data by species ID
-    const pokemonData = await pokemonResponse.json(); // Parse Pokémon data
-    const imageUrl = pokemonData.sprites.other.dream_world.front_default || pokemonData.sprites.other.home.front_default; // Get image URL
-    return imageUrl; // Return image URL
+    let speciesData = await fetchData(speciesUrl);
+    let pokemonData = await fetchData(
+        `https://pokeapi.co/api/v2/pokemon/${speciesData.id}/`
+    );
+    let imageUrl =
+        pokemonData.sprites.other.dream_world.front_default ||
+        pokemonData.sprites.other.home.front_default;
+    return imageUrl;
 }
 
-// Creates the container for the evolution chain display
-async function createEvolutionContainer() {
-    const containerRef = document.getElementById("container"); // Get container element reference
-    containerRef.innerHTML = evolutionChainContainerTemplate(); // Set inner HTML with the evolution chain template
+/**
+ * Displays an evolution image and name in the specified container.
+ *
+ * @function displayEvo
+ * @param {string} img - The URL of the Pokémon's evolution image.
+ * @param {string} name - The name of the evolved Pokémon.
+ * @param {string} ref - A reference string used to target the appropriate container.
+ * @description This function adds an evolution image and the corresponding Pokémon's name
+ * into the container identified by the given reference (`ref`). The content is rendered
+ * using the `evoTemplate` function.
+ */
+function displayEvo(img, name, ref) {
+    let container = document.getElementById(`evo-container-${ref}`);
+    container.innerHTML += evoTemplate(img, name);
 }
 
-// Functions to display evolution stages and arrows in the container
-function displayBaseEvo(img, name) {
-    const container = document.getElementById("evo-container-base"); // Get the base evolution container
-    container.innerHTML = baseEvoTemplate(img, name); // Display base evolution image and name
-}
-
-function displayFirstEvo(img, name) {
-    const container = document.getElementById("evo-container-first-evo"); // Get first evolution container
-    container.innerHTML += firstEvoTemplate(img, name); // Append first evolution image and name
-}
-
-function displaySecondEvo(img, name) {
-    const container = document.getElementById("evo-container-second-evo"); // Get second evolution container
-    container.innerHTML += secondEvoTemplate(img, name); // Append second evolution image and name
-}
-
-// Function to display the arrow with evolution trigger and level/item requirement
+/**
+ * Displays an evolution arrow with the corresponding trigger and level-up requirement.
+ *
+ * @function displayArrow
+ * @param {string} id - The ID of the container where the arrow should be displayed.
+ * @param {string} evolutionTriggerName - The name of the evolution trigger (e.g., "level-up").
+ * @param {string|number} levelUpRequerment - The level or item required for the evolution.
+ * @description This function updates the inner HTML of the container identified by the given `id`
+ * with an evolution arrow, using the provided `evolutionTriggerName` and `levelUpRequerment`.
+ * The content is generated using the `arrowTemplate` function.
+ */
 function displayArrow(id, evolutionTriggerName, levelUpRequerment) {
-    document.getElementById(`${id}`).innerHTML = ""; // Clear existing arrow content
-    document.getElementById(`${id}`).innerHTML = arrowTemplate(evolutionTriggerName, levelUpRequerment); // Set new arrow content
+    document.getElementById(`${id}`).innerHTML = "";
+    document.getElementById(`${id}`).innerHTML = arrowTemplate(
+        evolutionTriggerName,
+        levelUpRequerment
+    );
+}
+
+/**
+ * Creates and renders the evolution chain container.
+ *
+ * @function createEvolutionContainer
+ * @description This function sets the inner HTML of the container with the ID "container"
+ * to display the evolution chain. The content is generated using the `evolutionChainContainerTemplate` function.
+ * It is used to initialize the layout for showing the evolution details of a Pokémon.
+ * @async
+ */ async function createEvolutionContainer() {
+    let containerRef = document.getElementById("container");
+    containerRef.innerHTML = evolutionChainContainerTemplate();
+}
+
+/**
+ * Clears the content of the container and hides the toggle switch.
+ *
+ * @function clearContainer
+ * @description This function clears the inner HTML of the container with the ID "container"
+ * and hides the toggle switch by adding the `d-none` class to the element with the ID "switch".
+ */
+function clearContainer() {
+    document.getElementById("container").innerHTML = "";
+    document.getElementById("switch").classList.add("d-none");
 }

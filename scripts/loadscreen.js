@@ -1,4 +1,3 @@
-// Array of motivational texts in English
 let text = [
     "Like a Pokéball – Sometimes it takes several attempts to achieve the goal.",
     "Even a Magikarp can become a powerful Gyarados – Never give up.",
@@ -12,7 +11,13 @@ let text = [
     "Like a Pokémon journey – the journey is just as important as the destination.",
 ];
 
-// Function to display the loading screen with spinner and text
+/**
+ * Displays the loading screen with a progress indicator.
+ *
+ * @function displayLoadScreen
+ * @description Toggles the fix container, shows the loading spinner,
+ * calculates and displays the loading progress, and displays the load text.
+ */
 function displayLoadScreen() {
     toggleFixContainer();
     displayLoadSpinner();
@@ -20,6 +25,15 @@ function displayLoadScreen() {
     showProgress();
     displayLoadText();
 }
+
+/**
+ * Updates and displays the progress of the loading process.
+ *
+ * @function showProgress
+ * @description Adjusts the visibility and clipping of the spinner
+ * based on the progress percentage, and updates the progress bar width
+ * and displayed text with the current progress.
+ */
 
 function showProgress() {
     let spinner = document.getElementById("load-spinner");
@@ -33,35 +47,73 @@ function showProgress() {
     progressBar.innerHTML = progress + "%";
 }
 
+/**
+ * Calculates the loading progress as a percentage.
+ *
+ * @function calcProgress
+ * @param {number} status - The current progress status.
+ * @param {number} limit - The total limit or maximum value.
+ * @returns {number} The calculated progress percentage.
+ */
+
 function calcProgress(status, limit) {
     progress = Math.round((status / limit) * 100);
     return progress;
 }
 
+/**
+ * Toggles the "overflow-hidden" class on the body element.
+ *
+ * @function toggleFixContainer
+ * @description Adds or removes the "overflow-hidden" class to the body element,
+ * preventing or allowing scrolling.
+ */
 function toggleFixContainer() {
     document.getElementById("body").classList.toggle("overflow-hidden");
 }
 
-// Function to display the loading spinner
+/**
+ * Displays the loading spinner on the screen.
+ *
+ * @function displayLoadSpinner
+ * @description Removes the "d-none" class from the load screen,
+ * and injects the loading spinner HTML into the load screen element.
+ */
 function displayLoadSpinner() {
     let loadScreenRef = document.getElementById("load-screen");
     loadScreenRef.classList.remove("d-none");
     loadScreenRef.innerHTML = loadSpinner();
 }
 
-// Function to display a random motivational text
+/**
+ * Displays random loading text.
+ *
+ * @function displayLoadText
+ * @description Sets the inner HTML of the load text element to a random text
+ * from the predefined `text` array, selected using a random index.
+ */
 function displayLoadText() {
     let loadTextRef = document.getElementById("text");
     loadTextRef.innerHTML = `${text[randomNumber()]}`;
 }
 
-// Function to generate a random number between 0 and 9
+/**
+ * Generates a random number between 0 and 9.
+ *
+ * @function randomNumber
+ * @returns {number} A random integer between 0 and 9.
+ */
 function randomNumber() {
     return Math.floor(Math.random() * 10);
 }
 
-// Function to hide the loading screen
-function disableDisplayLoadScreen() {
+/**
+ * Disables the display of the loading screen.
+ *
+ * @function disableDisplayLoadScreen
+ * @description Adds the "d-none" class to the load screen element to hide it,
+ * and toggles the "overflow-hidden" class on the body element.
+ */ function disableDisplayLoadScreen() {
     document.getElementById("load-screen").classList.add("d-none");
     toggleFixContainer();
 }

@@ -1,14 +1,27 @@
-let checkboxStatus = false;
+/**
+ * Displays the stats of the current Pokémon.
+ *
+ * @function showStats
+ * @description Resets the container, displays the stats in both a chart and a table,
+ * and updates the background color based on the current Pokémon's data.
+ */
 
-// Main function to display the stats of a Pokémon based on its ID
-async function showStats() {
+function showStats() {
     resetContainer();
     displayStatsValuesInChart(currentPokemon.stats);
     displayStatsValuesInTable(currentPokemon.stats);
-    updateColorSpiderChart();
+    updateBgColor(currentPokemon, "data-polygon");
 }
 
-// Resets the container and prepares it for the stats display
+/**
+ * Resets the container to its initial state.
+ *
+ * @function resetContainer
+ * @description Clears the current content, shows the toggle button,
+ * and reinitializes elements like the stats container, spider chart,
+ * and checkbox status.
+ */
+
 function resetContainer() {
     clearContainer();
     showToggleButton();
@@ -17,82 +30,128 @@ function resetContainer() {
     restoreCheckboxStatus();
 }
 
-// Shows the toggle button that allows switching between chart and table view
-function showToggleButton() {
+/**
+ * Displays the toggle button.
+ *
+ * @function showToggleButton
+ * @description Removes the "d-none" class from the toggle button element, making it visible.
+ */ function showToggleButton() {
     document.getElementById("switch").classList.remove("d-none");
 }
 
-// Creates the main stats container to display both table and chart
-function createStatsContainer() {
-    const containerRef = document.getElementById("container");
+/**
+ * Creates and renders the stats container.
+ *
+ * @function createStatsContainer
+ * @description Sets the inner HTML of the container element to the rendered stats container.
+ */ function createStatsContainer() {
+    let containerRef = document.getElementById("container");
     containerRef.innerHTML = renderStatsContainer();
 }
 
-// Creates the layout for the spider chart
-function createSpiderChart() {
-    const containerRef = document.getElementById("spider-chart-container");
+/**
+ * Creates and renders the spider chart.
+ *
+ * @function createSpiderChart
+ * @description Sets the inner HTML of the spider chart container element to the rendered spider chart.
+ */ function createSpiderChart() {
+    let containerRef = document.getElementById("spider-chart-container");
     containerRef.innerHTML = renderSpiderCart();
 }
 
-// Displays the stats values in a table format
-function displayStatsValuesInTable(stats) {
-    const statsTableRef = document.getElementById("stats-table");
-    // Loop through each stat and display its name and value in the table
-    for (const stat of stats) {
-        let statName = stat.stat.name.toUpperCase(); // Convert stat name to uppercase
-        let statValue = stat.base_stat; // Get the stat value
-        statsTableRef.innerHTML += renderTable(statName, statValue); // Add the stat to the table using a template
+/**
+ * Displays Pokémon stats in a table format.
+ *
+ * @function displayStatsValuesInTable
+ * @param {Array} stats - An array of stats objects, each containing a name and base value.
+ * @description Iterates over the stats array, rendering each stat's name and value in a table format.
+ */ function displayStatsValuesInTable(stats) {
+    let statsTableRef = document.getElementById("stats-table");
+    for (let stat of stats) {
+        let statName = stat.stat.name.toUpperCase();
+        let statValue = stat.base_stat;
+        statsTableRef.innerHTML += renderTable(statName, statValue);
     }
 }
 
-// Displays the stats values in a spider chart
-function displayStatsValuesInChart(stats) {
-    const maxValue = 250; // Maximum stat value for scaling
-    const points = calculatePoints(stats, maxValue); // Calculate chart points based on stats
-    document.getElementById("data-polygon").setAttribute("points", points); // Set the calculated points for the polygon
-    updateChartLabels(stats); // Update chart labels with stat values
+/**
+ * Displays Pokémon stats in a chart format.
+ *
+ * @function displayStatsValuesInChart
+ * @param {Array} stats - An array of stats objects, each containing a name and base value.
+ * @description Calculates the chart points based on the stats, updates the polygon data,
+ * and updates the chart labels.
+ */ function displayStatsValuesInChart(stats) {
+    let maxValue = 250;
+    let points = calculatePoints(stats, maxValue);
+    document.getElementById("data-polygon").setAttribute("points", points);
+    updateChartLabels(stats);
 }
 
-// Updates the chart labels with the corresponding stat values
+/**
+ * Updates the labels on the chart with the corresponding stat values.
+ *
+ * @function updateChartLabels
+ * @param {Array} stats - An array of stats objects, each containing a name and base value.
+ * @description Loops through predefined stat labels and updates the corresponding label elements
+ * with the stat values, using the `appendValueToLabel` function to display the values.
+ */
 function updateChartLabels(stats) {
-    const labels = [
+    let labels = [
         "hp",
         "attack",
         "defense",
         "special-attack",
         "special-defense",
         "speed",
-    ]; // Stat labels
+    ];
     labels.forEach((label) => {
-        const stat = stats.find((s) => s.stat.name === label); // Find the stat for the current label
-        const value = stat ? stat.base_stat : 0; // Default to 0 if stat is not found
-        const textElement = document.getElementById(`${label}-label`); // Get the SVG text element for the label
-        appendValueToLabel(textElement, value); // Append the stat value below the label
+        let stat = stats.find((s) => s.stat.name === label);
+        let value = stat ? stat.base_stat : 0;
+        let textElement = document.getElementById(`${label}-label`);
+        appendValueToLabel(textElement, value);
     });
 }
 
-// Appends the stat value below the given label in the spider chart
+/**
+ * Appends a value to a given label element in the chart.
+ *
+ * @function appendValueToLabel
+ * @param {SVGElement} textElement - The SVG text element to append the value to.
+ * @param {number} value - The value to display next to the label.
+ * @description Creates a new SVG text element, sets its position based on the given label,
+ * and appends the value to it. The value is displayed slightly below the label.
+ */
 function appendValueToLabel(textElement, value) {
-    const valueElement = document.createElementNS(
+    let valueElement = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
-    ); // Create a new SVG text element
-    valueElement.setAttribute("x", textElement.getAttribute("x")); // Set the x position to match the label
+    );
+    valueElement.setAttribute("x", textElement.getAttribute("x"));
     valueElement.setAttribute(
         "y",
         parseInt(textElement.getAttribute("y")) + 12
-    ); // Adjust y position to display below the label
-    valueElement.setAttribute("font-size", "10"); // Set font size for stat value
-    valueElement.setAttribute("fill", "black"); // Set text color to black
-    valueElement.textContent = value; // Set the stat value as text content
-    textElement.parentNode.appendChild(valueElement); // Append the stat value to the chart
+    );
+    valueElement.setAttribute("font-size", "10");
+    valueElement.setAttribute("fill", "black");
+    valueElement.textContent = value;
+    textElement.parentNode.appendChild(valueElement);
 }
 
-// Calculates the points for the spider chart based on stats
+/**
+ * Calculates the points for the chart polygon based on the Pokémon stats.
+ *
+ * @function calculatePoints
+ * @param {Array} stats - An array of stats objects, each containing a name and base value.
+ * @param {number} maxValue - The maximum value for the stats to normalize the points.
+ * @returns {string} A string representing the calculated points for the chart polygon.
+ * @description Iterates over the dimensions (stats) and calculates the corresponding
+ * (x, y) coordinates for the chart, then returns a string of points to be used in the chart's polygon.
+ */
 function calculatePoints(stats, maxValue) {
-    const angle = (2 * Math.PI) / 6; // 360° divided by 6 (for each stat dimension)
-    const points = [];
-    const dimensions = [
+    let angle = (2 * Math.PI) / 6;
+    let points = [];
+    let dimensions = [
         "hp",
         "attack",
         "defense",
@@ -101,55 +160,55 @@ function calculatePoints(stats, maxValue) {
         "speed",
     ];
     for (let i = 0; i < dimensions.length; i++) {
-        const stat = stats.find((s) => s.stat.name === dimensions[i]); // Get the stat value for each dimension
-        const value = stat ? stat.base_stat : 0; // Default to 0 if not found
-        const x = (value / maxValue) * 100 * Math.cos(angle * i); // Calculate the x-coordinate
-        const y = (value / maxValue) * 100 * Math.sin(angle * i); // Calculate the y-coordinate
-        points.push(`${x},${y}`); // Add the point to the list
+        let stat = stats.find((s) => s.stat.name === dimensions[i]);
+        let value = stat ? stat.base_stat : 0;
+        let x = (value / maxValue) * 100 * Math.cos(angle * i);
+        let y = (value / maxValue) * 100 * Math.sin(angle * i);
+        points.push(`${x},${y}`);
     }
-    return points.join(" "); // Return the points as a string to form the polygon
+    return points.join(" ");
 }
 
-// Updates the color of the spider chart based on the Pokémon's type
-function updateColorSpiderChart() {
-    let typeForChart = currentPokemon.types[0].type.name; // Get the primary type of the Pokémon
-    let dataPolygonRef = document.getElementById("data-polygon"); // Get the spider chart polygon element
-    dataPolygonRef.classList.add(typeForChart); // Add a class based on the Pokémon's type to style the chart
-}
-
-// Toggles between table view and spider chart view based on checkbox status
+/**
+ * Toggles between the stats table and the spider chart view based on the checkbox status.
+ *
+ * @function toggleStatsView
+ * @description Checks the state of the checkbox and displays either the stats table
+ * or the spider chart, hiding the other. Updates the `checkboxStatus` based on the checkbox state.
+ */
 function toggleStatsView() {
-    const statsTable = document.getElementById("stats-table");
-    const spiderChart = document.getElementById("spider-chart-container");
-    const checkbox = document.getElementById("flexSwitchCheckDefault");
+    let statsTable = document.getElementById("stats-table");
+    let spiderChart = document.getElementById("spider-chart-container");
+    let checkbox = document.getElementById("flexSwitchCheckDefault");
 
-    checkboxStatus = checkbox.checked; // Update the global checkbox status
+    checkboxStatus = checkbox.checked;
 
     if (checkbox.checked) {
-        // If checkbox is checked, show the table and hide the spider chart
         statsTable.classList.remove("d-none");
         spiderChart.classList.add("d-none");
     } else {
-        // If checkbox is unchecked, show the spider chart and hide the table
         statsTable.classList.add("d-none");
         spiderChart.classList.remove("d-none");
     }
 }
 
-// Restores the table or chart view based on the previous checkbox status
-function restoreCheckboxStatus() {
-    const statsTable = document.getElementById("stats-table");
-    const spiderChart = document.getElementById("spider-chart-container");
-    const checkbox = document.getElementById("flexSwitchCheckDefault");
+/**
+ * Restores the checkbox status and displays the appropriate stats view.
+ *
+ * @function restoreCheckboxStatus
+ * @description Sets the checkbox status to the previously stored value (`checkboxStatus`),
+ * and displays either the stats table or the spider chart based on that status.
+ */ function restoreCheckboxStatus() {
+    let statsTable = document.getElementById("stats-table");
+    let spiderChart = document.getElementById("spider-chart-container");
+    let checkbox = document.getElementById("flexSwitchCheckDefault");
 
-    checkbox.checked = checkboxStatus; // Restore the previous checkbox state
+    checkbox.checked = checkboxStatus;
 
     if (checkboxStatus) {
-        // Show the table if checkbox was previously checked
         statsTable.classList.remove("d-none");
         spiderChart.classList.add("d-none");
     } else {
-        // Show the spider chart if checkbox was previously unchecked
         statsTable.classList.add("d-none");
         spiderChart.classList.remove("d-none");
     }

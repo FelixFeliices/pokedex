@@ -1,6 +1,7 @@
-// Global variables
-
 let promError = false;
+let isFilterActive = false;
+let isLoadMoreActive = false;
+let checkboxStatus = false;
 
 let startPokemon = 0;
 let limit = 20;
@@ -9,21 +10,25 @@ let fullPokedexLimit = 1025;
 let totalLoadedPokemons = 0;
 let progress = 0;
 let pokedexFillCycle = 0;
-let isFilterActive = false;
-let isLoadMoreActive = false;
+let currentPokemon = 0;
+
 let speciesArray = [];
 let chunkedPokedex = [];
 let fullPokedex = [];
+let possibleFirstEvoltions = [];
+let possibleSecondEvoltions = [];
 
 let BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}&limit=${limit}`;
 const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&limit=${fullPokedexLimit}`;
 
 /**
- * This function initializes the Pokédex by clearing content, disabling the load button,
- * resetting filter and load states, and either fetching data from the API
- * or displaying the already fetched chunked Pokédex.
+ * Initializes the Pokémon data display process by clearing content and setting up necessary states.
+ *
+ * @function init
+ * @returns {Promise<void>} A promise that resolves when the Pokémon data is either loaded or already available.
+ * @description This function clears the existing content, disables the load button, and sets the initial states. It then checks if the `chunkedPokedex` is empty. If so, it triggers the loading of Pokémon data; otherwise, it directly displays the existing Pokémon.
  */
-async function init() {
+function init() {
     clearContent();
     disableLoadBtn();
 
@@ -32,61 +37,48 @@ async function init() {
 
     if (chunkedPokedex.length === 0) {
         displayLoadScreen();
-        await usePromise(BASE_URL);
-    } else {
-        displayAllPokemons(chunkedPokedex);
-    }
+        usePromise(BASE_URL);
+    } else displayAllPokemons(chunkedPokedex);
 }
 
 /**
- * This function fetches data from the given URL using a promise.
+ * Returns a promise that resolves with the result of `getPokemon` or rejects if an error occurs.
  *
- * @param {string} URL - The URL from which to fetch Pokémon data.
- * @returns {Promise<void>} Resolves when data is fetched and processed.
+ * @param {string} URL The URL to fetch Pokémon data from.
+ * @returns {Promise<void>} A promise that resolves with the result of `getPokemon` or rejects on failure.
+ * @throws {Error} If `getPokemon` fails, the promise will reject with an error.
+ * @description This function wraps the `getPokemon` call inside a promise. If the `getPokemon` operation succeeds, the promise resolves; if it fails, the promise is rejected with the corresponding error.
  */
 async function usePromise(URL) {
-    try {
-        await getPromise(URL);
-    } catch (error) {
-        console.log("error", error);
-    }
-}
-/**
- * Diese Funktion erstellt ein Promise, das Pokémon-Daten abruft und basierend auf `promError` auflöst oder ablehnt.
- *
- * @param {string} URL - Die URL, von der Pokémon-Daten abgerufen werden.
- * @returns {Promise} Ein Promise, das mit Pokémon-Daten aufgelöst oder abgelehnt wird, falls ein Fehler auftritt.
- */
-function getPromise(URL) {
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            if (promError) {
-                reject();
-            } else {
-                resolve(getPokemon(URL));
-            }
-        }, 1000);
+        try {
+            resolve(getPokemon(URL));
+        } catch (error) {
+            reject(error);
+        }
     });
 }
 
 /**
- * Diese Funktion ruft Pokémon-Spezies-Daten von der angegebenen URL ab und verarbeitet die Ergebnisse.
+ * Fetches Pokémon data and determines how to populate the Pokedex.
  *
- * @param {string} url - Die URL, von der Pokémon-Spezies-Daten abgerufen werden.
- * @returns {Promise<void>} Wird aufgelöst, nachdem Pokémon-Daten verarbeitet wurden.
+ * @async
+ * @function getPokemon
+ * @param {string} url - The API URL to fetch Pokémon data from.
+ * @description Fetches Pokémon data from the provided URL and increments the `pokedexFillCycle`. Passes the fetched Pokémon results to `getPokemonOverwiew` for further processing.
  */
 async function getPokemon(url) {
-    let object = await fetchData(url);
-    speciesArray = object.results;
+    let response = await fetchData(url);
     pokedexFillCycle++;
-    getPokemonOverwiew(speciesArray);
+    getPokemonOverwiew(response.results);
 }
 
 /**
- * This function processes an array of Pokémon species and decides whether to fill the chunked
- * or the full Pokédex depending on the current cycle.
+ * Determines which Pokedex filling function to execute based on the current cycle.
  *
- * @param {Array} array - The array of Pokémon species data.
+ * @function getPokemonOverwiew
+ * @param {Array} array - An array containing Pokémon species data.
+ * @description Executes either `fillChunckedPokedex` or `fillFullPokedex` depending on the value of `pokedexFillCycle`. If the cycle is 1, it fills the chunked Pokedex. If the cycle is 2, it fills the full Pokedex.
  */
 function getPokemonOverwiew(array) {
     if (pokedexFillCycle === 1) {
@@ -97,97 +89,112 @@ function getPokemonOverwiew(array) {
 }
 
 /**
- * This function fills the chunked Pokédex Array with a limited set of Pokémon data and displays them.
+ * Asynchronously fills the `chunkedPokedex` array with Pokémon data and updates the UI.
  *
- * @param {Array} array - An array of Pokémon species data to be processed.
+ * @async
+ * @function fillChunckedPokedex
+ * @param {Array} array - An array containing Pokémon species data to fetch.
+ * @description Iterates through the given Pokémon species array, fetching and storing detailed Pokémon data in `chunkedPokedex`. Updates the UI by creating Pokémon cards, displaying details, and updating the progress bar. Enables the "Load More" button and disables the loading screen when completed.
  */
 async function fillChunckedPokedex(array) {
     loadedPokemons = 0;
     for (const species of array) {
-        let speciesURL = species.url;
-        let speciesOverwiew = await fetchData(speciesURL);
-        let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
-        let pokemon = await fetchData(pokemonURl);
-        let id = pokemon.id;
-        chunkedPokedex[id] = pokemon;
+        let speciesOverwiew = await fetchData(species.url);
+        let pokemon = await fetchData(speciesOverwiew.varieties[0].pokemon.url);
+        chunkedPokedex[pokemon.id] = pokemon;
         loadedPokemons++;
-        createPokemonCard(id);
-        displayPokemonDetails(id, pokemon);
+        createPokemonCard(pokemon);
+        displayPokemonDetails(pokemon);
         calcProgress(loadedPokemons, limit);
         showProgress();
     }
-
     showLoadMore();
     enableLoadBtn();
-    await usePromise(FULL_POKEDEX_URL);
     disableDisplayLoadScreen();
+    await usePromise(FULL_POKEDEX_URL);
 }
 
 /**
- * This function fills the full Pokédex Array with Pokémon data.
+ * Hides the progress bar when the progress reaches 100%.
  *
- * @param {Array} array - An array of Pokémon species data to be processed.
+ * @function hideProgressbar
+ * @description Checks the progress percentage using `calcProgress` and hides the progress bar container if the progress equals 100%.
  */
 async function fillFullPokedex(array) {
     for (const species of array) {
-        let speciesURL = species.url;
-        let speciesOverwiew = await fetchData(speciesURL);
+        let speciesOverwiew = await fetchData(species.url);
         let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
         let pokemon = await fetchData(pokemonURl);
-        let id = pokemon.id;
-        fullPokedex[id] = pokemon;
-        totalLoadedPokemons = fullPokedex.length;
-        document.getElementById("full-progress-bar").style.width =
-            calcProgress(totalLoadedPokemons, fullPokedexLimit) + "%";
+        fullPokedex[pokemon.id] = pokemon;
 
-        if (calcProgress(totalLoadedPokemons, fullPokedexLimit) == 100) {
-            document
-                .getElementById("progress-bar-container")
-                .classList.add("d-none");
-        }
+        updateProgressbar();
+        hideProgressbar();
+    }
+}
+function updateProgressbar() {
+    totalLoadedPokemons = fullPokedex.length;
+    document.getElementById("full-progress-bar").style.width =
+        calcProgress(totalLoadedPokemons, fullPokedexLimit) + "%";
+}
+
+function hideProgressbar() {
+    if (calcProgress(totalLoadedPokemons, fullPokedexLimit) == 100) {
+        document
+            .getElementById("progress-bar-container")
+            .classList.add("d-none");
     }
 }
 
 /**
- * This function fetches data from a given URL.
+ * Fetches JSON data from the provided URL.
  *
- * @param {string} url - The URL to fetch data from.
- * @returns {Promise<Object>} The data fetched from the given URL.
+ * @async
+ * @function fetchData
+ * @param {string} url - The URL from which to fetch data.
+ * @returns {Promise<Object>} The JSON response from the fetched URL.
  */
 async function fetchData(url) {
     let response = await fetch(url);
-    return await response.json();
+    return response.json();
 }
 
 /**
- * This function displays all Pokémon from the given array by creating cards and displaying details.
+ * Displays all Pokémon by rendering their cards and details.
  *
- * @param {Array} pokemons - An array of Pokémon to be displayed.
+ * @function displayAllPokemons
+ * @param {Array} pokemons - The list of Pokémon to display.
+ * @description Clears the content container, iterates through the given Pokémon array,
+ * creates a card for each Pokémon, and displays its details.
  */
 function displayAllPokemons(pokemons) {
     clearContent();
-
-    for (let i = 1; i < pokemons.length; i++) {
-        let pokemon = pokemons[i];
+    pokemons.forEach((pokemon) => {
         let pokemonIndex = chunkedPokedex.indexOf(pokemon);
-
         createPokemonCard(pokemonIndex);
         displayPokemonDetails(pokemonIndex, chunkedPokedex[pokemonIndex]);
-    }
+    });
 }
 
 /**
- * This function creates a Pokémon card and appends it to the content area.
+ * Creates and appends a Pokémon card to the content container.
  *
- * @param {number} pokemonIndex - The index of the Pokémon to create a card for.
+ * @function createPokemonCard
+ * @param {number} pokemonIndex - The index of the Pokémon to render.
+ * @description This function fetches the content container by its ID and appends a
+ * Pokémon card by calling the `renderPkmCard` function with the given Pokémon index.
  */
-function createPokemonCard(pokemonIndex) {
+function createPokemonCard(pokemon) {
     let contentRef = document.getElementById("content");
-    contentRef.innerHTML += renderPkmCard(pokemonIndex);
+    contentRef.innerHTML += renderPkmCard(pokemon.id);
 }
 
 /**
- * This function loads more Pokémon data when the "load more" button is clicked.
+ * Initializes the loading process for Pokémon data.
+ *
+ * @function loadPokemons
+ * @description This function resets the necessary variables and starts the process of loading
+ * additional Pokémon data. It calculates the progress, sets a loading limit, disables the load button,
+ * and displays the loading screen. The function fetches Pokémon species data from the API and processes it.
  */
 function loadPokemons() {
     loadedPokemons = 0;
@@ -204,23 +211,29 @@ function loadPokemons() {
 }
 
 /**
- * This function displays details of the given Pokémon, such as name, image, and type and update the backgroundcolor dependent on the color of the type.
+ * Displays detailed information about a Pokémon.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {Object} pokemon - The Pokémon object containing its details.
+ * @function displayPokemonDetails
+ * @param {Object} pokemon - The Pokémon object containing all necessary details.
+ * @description This function updates the Pokémon card's background color based on its primary type,
+ * displays its name and ID, renders its image, and shows its type(s). It also handles cases where
+ * a Pokémon has only one type by hiding the secondary type image.
  */
-function displayPokemonDetails(pokemonIndex, pokemon) {
+function displayPokemonDetails(pokemon) {
     updateBgColor(pokemon, `pokemon-card-${pokemon.id}`);
     displayNameAndId(pokemon);
     displayImg(pokemon);
-    displayType(pokemonIndex, pokemon);
+    displayType(pokemon.id, pokemon);
 }
 
 /**
- * This function displays the name and ID of the Pokémon.
+ * Displays the image of a Pokémon.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {Object} pokemon - The Pokémon object containing its name and ID.
+ * @function displayImg
+ * @param {Object} pokemon - The Pokémon object containing its sprite information.
+ * @description This function selects the appropriate sprite image from the Pokémon's `sprites` object.
+ * It sets the `src` attribute of an image element corresponding to the Pokémon's ID (`pokemon-img${pokemon.id}`)
+ * with the URL of the first available sprite (either `dream_world`, `home`, or `showdown`).
  */
 function displayNameAndId(pokemon) {
     let id_nameRef = document.getElementById(`id_name${pokemon.id}`);
@@ -239,45 +252,48 @@ function displayImg(pokemon) {
         pokemon.sprites.other.dream_world.front_default ||
         pokemon.sprites.other.home.front_default ||
         pokemon.sprites.other.showdown.front_default;
-
     pokemonImgRef.src = img;
 }
 
 /**
- * This function displays the type(s) of the Pokémon.
+ * Displays the types of a Pokémon.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {Object} pokemon - The Pokémon object containing its type data.
+ * @function displayType
+ * @param {number} pokemonIndex - The index of the Pokémon in the list.
+ * @param {Object} pokemon - The Pokémon object that contains its types.
+ * @description This function iterates over the types of a Pokémon. It renders the first and second type
+ * images using `renderFirstTypeImg` and `renderSecondTypeImg`. If the Pokémon has only one type, it hides
+ * the image for the second type by calling `hideEmptyType`.
  */
 function displayType(pokemonIndex, pokemon) {
     pokemon.types.forEach((type, index) => {
-        if (index === 0) {
-            renderFirstTypeImg(pokemonIndex, type.type.name);
-        } else if (index === 1) {
-            renderSecondTypeImg(pokemonIndex, type.type.name);
-        }
+        if (index === 0) renderFirstTypeImg(pokemonIndex, type.type.name);
+        else if (index === 1) renderSecondTypeImg(pokemonIndex, type.type.name);
     });
-
-    if (checkSecondTypeAvailable(pokemon)) {
-        hideEmptyType(pokemonIndex);
-    }
+    if (checkSecondTypeAvailable(pokemon)) hideEmptyType(pokemonIndex);
 }
 
 /**
- * This function checks if the second type is available for the Pokémon.
+ * Checks if the Pokémon has a second type.
  *
- * @param {Object} pokemon - The Pokémon object containing its types.
- * @returns {boolean} Returns true if only one type exists, otherwise false.
+ * @function checkSecondTypeAvailable
+ * @param {Object} pokemon - The Pokémon object to check.
+ * @returns {boolean} Returns `true` if the Pokémon has only one type, `false` otherwise.
+ * @description This function checks the number of types a Pokémon has. If the Pokémon has more than
+ * one type, it returns `false`, indicating that the second type is available. Otherwise, it returns `true`.
  */
 function checkSecondTypeAvailable(pokemon) {
     return pokemon.types.length <= 1;
 }
 
 /**
- * This function renders the first type image of the Pokémon.
+ * Renders the image for the first Pokémon type.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {string} pokemonTypes - The name of the Pokémon's first type.
+ * @function renderFirstTypeImg
+ * @param {number} pokemonIndex - The index of the Pokémon in the dataset.
+ * @param {string} pokemonTypes - The type of the Pokémon, used to select the corresponding image.
+ * @description This function updates the `src` attribute of the first type image element based on
+ * the given Pokémon type. The image is expected to be in the `./img/icon/icon-types/` directory.
  */
 function renderFirstTypeImg(pokemonIndex, pokemonTypes) {
     let pokemonFirstImgTypeRef = document.getElementById(
@@ -287,10 +303,13 @@ function renderFirstTypeImg(pokemonIndex, pokemonTypes) {
 }
 
 /**
- * This function renders the second type image of the Pokémon.
+ * Renders the image for the second Pokémon type.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {string} pokemonTypes - The name of the Pokémon's second type.
+ * @function renderSecondTypeImg
+ * @param {number} pokemonIndex - The index of the Pokémon in the dataset.
+ * @param {string} pokemonTypes - The type of the Pokémon, used to select the corresponding image.
+ * @description This function updates the `src` attribute of the second type image element based on
+ * the given Pokémon type. The image is expected to be in the `./img/icon/icon-types/` directory.
  */
 function renderSecondTypeImg(pokemonIndex, pokemonTypes) {
     let pokemonSecondImgTypeRef = document.getElementById(
@@ -300,9 +319,12 @@ function renderSecondTypeImg(pokemonIndex, pokemonTypes) {
 }
 
 /**
- * This function hides the second type image if the Pokémon has only one type.
+ * Hides the element representing the second Pokémon type if it's empty.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
+ * @function hideEmptyType
+ * @param {number} pokemonIndex - The index of the Pokémon in the dataset.
+ * @description This function hides the second type image of a Pokémon by adding the 'd-none' class
+ * to the corresponding element, typically when the Pokémon only has one type.
  */
 function hideEmptyType(pokemonIndex) {
     document
@@ -311,10 +333,13 @@ function hideEmptyType(pokemonIndex) {
 }
 
 /**
- * This function updates the background color of the Pokémon card based on its primary type.
+ * Updates the background color of a specified element based on the Pokémon's type.
  *
- * @param {number} pokemonIndex - The index of the Pokémon in the array.
- * @param {Object} pokemon - The Pokémon object containing its type data.
+ * @function updateBgColor
+ * @param {Object} pokemon - The Pokémon object containing the type information.
+ * @param {string} ref - The ID of the element whose background color will be updated.
+ * @description This function adds a class to the specified element based on the first type of the Pokémon,
+ * which typically changes the background color to visually represent that type.
  */
 function updateBgColor(pokemon, ref) {
     let cardRef = document.getElementById(ref);
@@ -323,7 +348,11 @@ function updateBgColor(pokemon, ref) {
 }
 
 /**
- * This function clears the content area and ensures that the "load more" button is visible.
+ * Clears the content area and ensures the "Load More" button is visible.
+ *
+ * @function clearContent
+ * @description This function clears the inner HTML of the content section and ensures the "Load More" button
+ * is displayed by removing the "d-none" class.
  */
 function clearContent() {
     document.getElementById("content").innerHTML = "";
@@ -331,7 +360,10 @@ function clearContent() {
 }
 
 /**
- * This function disables the "Load More" button to prevent multiple clicks.
+ * Disables the "Load More" button by setting its disabled property to true.
+ *
+ * @function disableLoadBtn
+ * @description This function disables the "Load More" button, preventing the user from interacting with it.
  */
 function disableLoadBtn() {
     let buttonRef = document.getElementById("load-more-btn");
@@ -339,8 +371,13 @@ function disableLoadBtn() {
 }
 
 /**
- * This function enables the "Load More" button after a delay.
+ * Enables the "Load More" button by setting its disabled property to false.
+ *
+ * @function enableLoadBtn
+ * @description This function enables the "Load More" button by removing the disabled state, allowing
+ * the user to interact with it.
  */
+
 function enableLoadBtn() {
     let buttonRef = document.getElementById("load-more-btn");
     buttonRef.disabled = false;

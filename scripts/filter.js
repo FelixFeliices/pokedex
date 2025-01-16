@@ -1,145 +1,253 @@
-// Main function to filter Pokémon by name based on user input
+/**
+ * Filters Pokémon by name based on user input.
+ *
+ * @function filterPkmName
+ * @description This function retrieves the input value, filters Pokémon by name,
+ * activates a filter flag, and handles input scenarios such as empty or specific lengths.
+ */
+
 function filterPkmName() {
-  const inputRef = getInputValue(); // Get user input
-  const filteredPokemons = filterPokemonsByName(inputRef); // Filter Pokémon by name
-  isFilterActive = true; // Activate the filter mode
+    let inputRef = getInputValue();
+    let filteredPokemons = filterPokemonsByName(inputRef);
+    isFilterActive = true;
 
-  handleInputLength(inputRef, filteredPokemons); // Handle different input lengths
-  handleEmptyInput(inputRef); // Handle empty input
+    handleInputLength(inputRef, filteredPokemons);
+    handleEmptyInput(inputRef);
 }
 
-// Retrieves and converts the input value to lowercase
+/**
+ * Retrieves and formats the value of the input field.
+ *
+ * @function getInputValue
+ * @returns {string} The lowercase value from the input field with the ID "input".
+ */
 function getInputValue() {
-  return document.getElementById("input").value.toLowerCase();
+    return document.getElementById("input").value.toLowerCase();
 }
 
-// Filters Pokémon from fullPokedex based on input value
+/**
+ * Filters the full Pokémon list based on the input string.
+ *
+ * @function filterPokemonsByName
+ * @param {string} input - The search string to filter Pokémon names.
+ * @returns {Array} A filtered array of Pokémon whose names include the input string.
+ */
 function filterPokemonsByName(input) {
-  return fullPokedex.filter((pokemon) => pokemon.name.toLowerCase().includes(input));
+    return fullPokedex.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(input)
+    );
 }
 
-// Handles scenarios where input length is 3 or more characters
+/**
+ * Handles UI and logic based on the length of the input and filtered Pokémon list.
+ *
+ * @function handleInputLength
+ * @param {string} inputRef - The input value entered by the user.
+ * @param {Array} filteredPokemons - The filtered array of Pokémon.
+ * @description Prepares and displays filtered Pokémon if the input length is 3 or more.
+ * Otherwise, it resets the view to its default state.
+ */
 function handleInputLength(inputRef, filteredPokemons) {
-  if (inputRef.length >= 3) {
-    prepareFilteredPokemons(filteredPokemons); // Prepare and display filtered Pokémon
-    $(".dropdown-menu").removeClass("show"); // Hide dropdown menu
-    hideText(); // Hide input message
-    disableLoadBtn(); // Disable load button
-  } else {
-    resetView(); // Reset view for short input
-  }
-}
-
-// Resets the view for input less than or equal to 2 characters
-function resetView() {
-  showText(); // Show input message
-  init(); // Reinitialize Pokémon list
-  enableLoadBtn(); // Enable load button
-}
-
-// Handles scenarios where the input is empty
-function handleEmptyInput(inputRef) {
-  if (checkLengthEqualZero(inputRef)) {
-    hideText(); // Hide input message
-    enableLoadBtn(); // Enable load button
-  }
-}
-
-// Checks if the length of the input is zero
-function checkLengthEqualZero(param) {
-  return param.length === 0;
-}
-
-// Filters Pokémon by a specific name passed as a parameter
-function filterExamplePkmName(name) {
-  let inputRef = name.toLowerCase(); // Convert the name to lowercase
-  let filteredPokemons = fullPokedex.filter((pokemon) => pokemon.name.toLowerCase().includes(inputRef)); // Filter Pokémon by name
-  isFilterActive = true; // Activate filter mode
-
-  prepareFilteredPokemons(filteredPokemons); // Prepare and display filtered Pokémon
-  $(".dropdown-menu").removeClass("show"); // Hide the dropdown menu
-}
-
-// Filters Pokémon by type based on a parameter (e.g., "fire", "water")
-function filterPkmType(parameter) {
-  let typeRef = parameter.toLowerCase(); // Convert the type to lowercase
-  let filteredPokemons = fullPokedex.filter((pokemon) => {
-    isFilterActive = true; // Activate filter mode
-
-    // Loop through Pokémon's types and check if the type matches the parameter
-    for (let i = 0; i < pokemon.types.length; i++) {
-      if (pokemon.types[i].type.name.toLowerCase().includes(typeRef)) {
-        return true; // Return true if a match is found
-      }
+    if (inputRef.length >= 3) {
+        prepareFilteredPokemons(filteredPokemons);
+        $(".dropdown-menu").removeClass("show");
+        hideText();
+        disableLoadBtn();
+    } else {
+        resetView();
     }
-    return false; // Return false if no match is found
-  });
-  closeDropDown(); // Close the dropdown menu after filtering
-  prepareFilteredPokemons(filteredPokemons); // Prepare and display filtered Pokémon
 }
 
-// Prepares the display of the filtered Pokémon list
+/**
+ * Resets the application view to its default state.
+ *
+ * @function resetView
+ * @description Displays default text, reinitializes the application,
+ * and enables the load button.
+ */
+function resetView() {
+    showText();
+    init();
+    enableLoadBtn();
+}
+
+/**
+ * Handles the scenario where the input field is empty.
+ *
+ * @function handleEmptyInput
+ * @param {string} inputRef - The input value entered by the user.
+ * @description Hides text and enables the load button if the input is empty.
+ */ function handleEmptyInput(inputRef) {
+    if (checkLengthEqualZero(inputRef)) {
+        hideText();
+        enableLoadBtn();
+    }
+}
+
+/**
+ * Checks if the length of the given parameter is zero.
+ *
+ * @function checkLengthEqualZero
+ * @param {string} param - The string to check.
+ * @returns {boolean} True if the length is zero, otherwise false.
+ */
+function checkLengthEqualZero(param) {
+    return param.length === 0;
+}
+
+/**
+ * Filters Pokémon by a given name and updates the UI accordingly.
+ *
+ * @function filterExamplePkmName
+ * @param {string} name - The name or partial name to filter Pokémon by.
+ * @description Converts the input to lowercase, filters Pokémon by name,
+ * activates the filter flag, prepares the filtered Pokémon,
+ * and hides the dropdown menu.
+ */
+function filterExamplePkmName(name) {
+    let inputRef = name.toLowerCase();
+    let filteredPokemons = fullPokedex.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(inputRef)
+    ); // Filter Pokémon by name
+    isFilterActive = true;
+
+    prepareFilteredPokemons(filteredPokemons);
+    document.getElementById(".dropdown-menu").removeClass("show");
+}
+
+/**
+ * Filters Pokémon by type and updates the UI.
+ *
+ * @function filterPkmType
+ * @param {string} parameter - The type or partial type to filter Pokémon by.
+ * @description Converts the input to lowercase, filters Pokémon by type,
+ * activates the filter flag, closes the dropdown menu, and prepares the filtered Pokémon.
+ */
+function filterPkmType(parameter) {
+    let typeRef = parameter.toLowerCase();
+    let filteredPokemons = fullPokedex.filter((pokemon) => {
+        isFilterActive = true;
+
+        for (let i = 0; i < pokemon.types.length; i++) {
+            if (pokemon.types[i].type.name.toLowerCase().includes(typeRef)) {
+                return true;
+            }
+        }
+        return false;
+    });
+    closeDropDown();
+    prepareFilteredPokemons(filteredPokemons);
+}
+
+/**
+ * Prepares and displays the filtered Pokémon list.
+ *
+ * @function prepareFilteredPokemons
+ * @param {Array} pokemons - The array of filtered Pokémon.
+ * @description Clears the content area. If no Pokémon are found, displays a
+ * "Pokemon not found" message; otherwise, displays the filtered Pokémon.
+ */
 function prepareFilteredPokemons(pokemons) {
-  document.getElementById("content").innerHTML = ""; // Clear the content area
-
-  // If no Pokémon found, display a message, otherwise show the filtered list
-  if (checkLenghtEqualZero(pokemons)) {
-    document.getElementById("content").innerHTML = "Pokemon not found";
-  } else {
-    showFiltredPokemon(pokemons); // Show filtered Pokémon
-  }
+    document.getElementById("content").innerHTML = "";
+    if (checkLenghtEqualZero(pokemons))
+        document.getElementById("content").innerHTML = "Pokemon not found";
+    else showFiltredPokemon(pokemons);
 }
 
-// Loops through the filtered Pokémon and displays them
+/**
+ * Displays the filtered Pokémon by creating cards and showing their details.
+ *
+ * @function showFiltredPokemon
+ * @param {Array} pokemons - The array of filtered Pokémon.
+ * @description Iterates over the filtered Pokémon, creates their cards,
+ * displays details, and hides the "Load More" button.
+ */
 function showFiltredPokemon(pokemons) {
-  for (let i = 0; i < pokemons.length; i++) {
-    let pokemon = pokemons[i];
-    let pokemonIndex = fullPokedex.indexOf(pokemon); // Get Pokémon index from fullPokedex
-    createPokemonCard(pokemonIndex); // Create and display Pokémon card
-    displayPokemonDetails(pokemonIndex, pokemon); // Show Pokémon details
-    hideLoadMore(); // Hide "Load More" button after filtering
-  }
+    for (let i = 0; i < pokemons.length; i++) {
+        let pokemon = pokemons[i];
+        let pokemonIndex = fullPokedex.indexOf(pokemon);
+        createPokemonCard(pokemonIndex);
+        displayPokemonDetails(pokemonIndex, pokemon);
+        hideLoadMore();
+    }
 }
 
-// Closes the dropdown menus and resets the state
+/**
+ * Closes the dropdown menus and updates their states.
+ *
+ * @function closeDropDown
+ * @description Toggles the visibility of the dropdown menus, sets their
+ * "aria-expanded" attribute to false, and enables the load button.
+ */
 function closeDropDown() {
-  $("#drop-down-1").dropdown("toggle"); // Toggle dropdown 1
-  document.getElementById("drop-down-1").setAttribute("aria-expanded", false); // Update ARIA attribute
-  $("#drop-down-2").dropdown("toggle"); // Toggle dropdown 2
-  document.getElementById("drop-down-2").setAttribute("aria-expanded", false); // Update ARIA attribute
-  enableLoadBtn(); // Enable the load button
+    $("#drop-down-1").dropdown("toggle");
+    document.getElementById("drop-down-1").setAttribute("aria-expanded", false);
+    $("#drop-down-2").dropdown("toggle");
+    document.getElementById("drop-down-2").setAttribute("aria-expanded", false);
+    enableLoadBtn();
 }
 
-// Hides the "Load More" button
+/**
+ * Hides the "Load More" button.
+ *
+ * @function hideLoadMore
+ * @description Adds the "d-none" class to the "Load More" button, making it hidden.
+ */
 function hideLoadMore() {
-  let buttonRef = document.getElementById("load-more-btn");
-  buttonRef.classList.add("d-none"); // Add class to hide the button
+    let buttonRef = document.getElementById("load-more-btn");
+    buttonRef.classList.add("d-none");
 }
 
-// Shows the "Load More" button
+/**
+ * Shows the "Load More" button.
+ *
+ * @function showLoadMore
+ * @description Removes the "d-none" class from the "Load More" button, making it visible.
+ */
 function showLoadMore() {
-  let buttonRef = document.getElementById("load-more-btn");
-  buttonRef.classList.remove("d-none"); // Remove class to show the button
+    let buttonRef = document.getElementById("load-more-btn");
+    buttonRef.classList.remove("d-none");
 }
 
-// Shows input-related text (e.g., input message)
-function showText() {
-  let inputTextRef = document.getElementById("input-message");
-  inputTextRef.classList.remove("transparent"); // Remove transparency to show the text
+/**
+ * Displays the text message by making it visible.
+ *
+ * @function showText
+ * @description Removes the "transparent" class from the text element,
+ * making the message visible.
+ */ function showText() {
+    let inputTextRef = document.getElementById("input-message");
+    inputTextRef.classList.remove("transparent");
 }
 
-// Hides input-related text (e.g., input message)
+/**
+ * Hides the text message by making it transparent.
+ *
+ * @function hideText
+ * @description Adds the "transparent" class to the text element,
+ * making the message invisible.
+ */
 function hideText() {
-  let inputTextRef = document.getElementById("input-message");
-  inputTextRef.classList.add("transparent"); // Add transparency to hide the text
+    let inputTextRef = document.getElementById("input-message");
+    inputTextRef.classList.add("transparent");
 }
 
-// Checks if the length of the parameter is zero
+/**
+ * Checks if the length of the given parameter is zero.
+ *
+ * @function checkLenghtEqualZero
+ * @param {Array|string} param - The array or string to check.
+ * @returns {boolean} True if the length is zero, otherwise false.
+ */
 function checkLenghtEqualZero(param) {
-  return param.length === 0; // Returns true if the length is zero
+    return param.length === 0;
 }
 
-// Resets the input field by clearing its content
-function resetInput() {
-  document.getElementById("input").value = ""; // Clear the input field
+/**
+ * Resets the input field to an empty state.
+ *
+ * @function resetInput
+ * @description Clears the value of the input field with the ID "input".
+ */ function resetInput() {
+    document.getElementById("input").value = "";
 }

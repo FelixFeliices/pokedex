@@ -6,8 +6,7 @@
     background: transparent;
     transition: all 0.125s ease-in;
     cursor: pointer;
-    /* animation: fadeIn 1.125s 1 forwards; */
-
+    border: unset;
 }
 
 

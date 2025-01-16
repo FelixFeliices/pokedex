@@ -2,10 +2,7 @@ function detailInfoTemplate() {
     return /*html*/ `
     <div id="detail-info" class="card overflow-x-hidden overflow-y-auto detail-info" onclick="event.stopPropagation()">
       <div id="overlay-container" class="d-flex column card-body align-middle position-relative overflow-hidden">
-        <div class="bg-img-container position-absolute d-flex justify-content-center">
-            <img class="opacity" src="./img/bg-img-pokeball.png" />
-            <img class="opacity" src="./img/bg-img-pokeball.png" />
-        </div>
+        
         <div onclick="toogleDetailInfo(event)" id="close-button" class="position-absolute pointer hover-effect">X</div>
         <div id="pokemon-name-id" class="text-center mb-2">#${
             currentPokemon.id
@@ -108,28 +105,12 @@ function evolutionChainContainerTemplate() {
     </div>`;
 }
 
-function baseEvoTemplate(img, name) {
+function evoTemplate(img, name) {
     return /*html*/ `  
       <div class="d-flex align-items-center column pointer">
         <img class="chain" src="${img}" alt="Image of${name}" />
         <span>${name}</span>
       </div>`;
-}
-
-function firstEvoTemplate(img, name) {
-    return /*html*/ `
-      <div class="d-flex align-items-center column">
-        <img class="chain" src="${img}" alt="Image of ${name}" />
-        <span>${name}</span>
-      </div>`;
-}
-
-function secondEvoTemplate(img, name) {
-    return /*html*/ `
-    <div class="d-flex align-items-center column">
-      <img class="chain" src="${img}" alt="Image of${name}" />
-      <span>${name}</span>
-    </div>`;
 }
 
 function arrowTemplate(evolutionTriggerName, levelUpRequerment) {

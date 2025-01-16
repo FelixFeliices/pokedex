@@ -8,6 +8,7 @@
 }
 
 .detail-info {
+  animation: fadeIn 0.5s forwards ease-in-out;
   /* background: linear-gradient(0deg, rgb(124, 230, 241), rgb(255, 255, 255)); */
   height: 88vh;
   max-height: 800px;
