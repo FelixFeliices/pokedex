@@ -22,13 +22,16 @@ let BASE_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=${startPokemon}
 const FULL_POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon-species?offset=0&limit=${fullPokedexLimit}`;
 
 /**
- * Initializes the Pokémon data display process by clearing content and setting up necessary states.
+ * Initializes the Pokémon application by clearing content, disabling the load button,
+ * and determining whether to fetch data or display already loaded Pokémon.
  *
- * @function init
- * @returns {Promise<void>} A promise that resolves when the Pokémon data is either loaded or already available.
- * @description This function clears the existing content, disables the load button, and sets the initial states. It then checks if the `chunkedPokedex` is empty. If so, it triggers the loading of Pokémon data; otherwise, it directly displays the existing Pokémon.
+ * @async
+ * @function
+ * @description This function resets the content and state of the application. If no
+ * Pokémon data is loaded in `chunkedPokedex`, it fetches data from the base URL using a promise.
+ * Otherwise, it displays the already loaded Pokémon.
  */
-function init() {
+async function init() {
     clearContent();
     disableLoadBtn();
 
@@ -37,17 +40,18 @@ function init() {
 
     if (chunkedPokedex.length === 0) {
         displayLoadScreen();
-        usePromise(BASE_URL);
-    } else displayAllPokemons(chunkedPokedex);
+        await usePromise(BASE_URL);
+    } else {
+        displayAllPokemons(chunkedPokedex);
+    }
 }
 
 /**
- * Returns a promise that resolves with the result of `getPokemon` or rejects if an error occurs.
+ * Calls `getPokemon` and wraps it in a promise to handle success or failure.
  *
  * @param {string} URL The URL to fetch Pokémon data from.
  * @returns {Promise<void>} A promise that resolves with the result of `getPokemon` or rejects on failure.
- * @throws {Error} If `getPokemon` fails, the promise will reject with an error.
- * @description This function wraps the `getPokemon` call inside a promise. If the `getPokemon` operation succeeds, the promise resolves; if it fails, the promise is rejected with the corresponding error.
+ * @description This function invokes `getPokemon` and handles its execution within a promise. If the `getPokemon` operation succeeds, the promise resolves. If an error occurs, the promise is rejected with the caught error.
  */
 async function usePromise(URL) {
     return new Promise((resolve, reject) => {
@@ -60,12 +64,14 @@ async function usePromise(URL) {
 }
 
 /**
- * Fetches Pokémon data and determines how to populate the Pokedex.
+ * Fetches Pokémon data from a given URL and processes it.
  *
  * @async
- * @function getPokemon
- * @param {string} url - The API URL to fetch Pokémon data from.
- * @description Fetches Pokémon data from the provided URL and increments the `pokedexFillCycle`. Passes the fetched Pokémon results to `getPokemonOverwiew` for further processing.
+ * @function
+ * @param {string} url - The API endpoint to fetch Pokémon data from.
+ * @description This function fetches Pokémon species data from the provided URL.
+ * After the data is fetched, it increments the `pokedexFillCycle` to track the current
+ * filling phase and passes the species data to `getPokemonOverwiew` for further processing.
  */
 async function getPokemon(url) {
     let response = await fetchData(url);
@@ -74,11 +80,13 @@ async function getPokemon(url) {
 }
 
 /**
- * Determines which Pokedex filling function to execute based on the current cycle.
+ * Determines which Pokedex (chunked or full) to fill based on the current cycle.
  *
- * @function getPokemonOverwiew
- * @param {Array} array - An array containing Pokémon species data.
- * @description Executes either `fillChunckedPokedex` or `fillFullPokedex` depending on the value of `pokedexFillCycle`. If the cycle is 1, it fills the chunked Pokedex. If the cycle is 2, it fills the full Pokedex.
+ * @param {Array} array - The array of Pokémon species data.
+ * @function
+ * @description This function evaluates the current pokedex fill cycle.
+ * If it's the first cycle, it fills the chunked Pokedex using `fillChunckedPokedex`.
+ * If it's the second cycle, it proceeds to populate the full Pokedex using `fillFullPokedex`.
  */
 function getPokemonOverwiew(array) {
     if (pokedexFillCycle === 1) {
@@ -89,22 +97,23 @@ function getPokemonOverwiew(array) {
 }
 
 /**
- * Asynchronously fills the `chunkedPokedex` array with Pokémon data and updates the UI.
+ * Fills the chunked Pokedex by fetching Pokémon data and updating the progress.
  *
+ * @param {Array} array - An array of species objects to fetch Pokémon details for.
  * @async
- * @function fillChunckedPokedex
- * @param {Array} array - An array containing Pokémon species data to fetch.
- * @description Iterates through the given Pokémon species array, fetching and storing detailed Pokémon data in `chunkedPokedex`. Updates the UI by creating Pokémon cards, displaying details, and updating the progress bar. Enables the "Load More" button and disables the loading screen when completed.
+ * @function
+ * @description This function processes a chunk of the Pokémon species array. It fetches details for each species and populates the `chunkedPokedex` with the data. The function also updates the UI by creating Pokémon cards, displaying their details, and showing the loading progress.
  */
 async function fillChunckedPokedex(array) {
     loadedPokemons = 0;
     for (const species of array) {
         let speciesOverwiew = await fetchData(species.url);
         let pokemon = await fetchData(speciesOverwiew.varieties[0].pokemon.url);
-        chunkedPokedex[pokemon.id] = pokemon;
+        let id = pokemon.id;
+        chunkedPokedex[id] = pokemon;
         loadedPokemons++;
-        createPokemonCard(pokemon);
-        displayPokemonDetails(pokemon);
+        createPokemonCard(id);
+        displayPokemonDetails(id, pokemon);
         calcProgress(loadedPokemons, limit);
         showProgress();
     }
@@ -115,28 +124,41 @@ async function fillChunckedPokedex(array) {
 }
 
 /**
- * Hides the progress bar when the progress reaches 100%.
+ * Fills the full Pokedex by fetching Pokémon data and storing it in the `fullPokedex` array.
  *
- * @function hideProgressbar
- * @description Checks the progress percentage using `calcProgress` and hides the progress bar container if the progress equals 100%.
+ * @param {Array} array - An array of species objects to fetch Pokémon details for.
+ * @async
+ * @function
+ * @description This function loops through the given species array, fetching detailed Pokémon data for each entry. It stores each Pokémon's data in the `fullPokedex` array. After each Pokémon is added, the progress bar is updated and hidden when the loading is complete.
  */
 async function fillFullPokedex(array) {
     for (const species of array) {
         let speciesOverwiew = await fetchData(species.url);
-        let pokemonURl = speciesOverwiew.varieties[0].pokemon.url;
-        let pokemon = await fetchData(pokemonURl);
-        fullPokedex[pokemon.id] = pokemon;
+        let pokemon = await fetchData(speciesOverwiew.varieties[0].pokemon.url);
+        let id = pokemon.id;
+        fullPokedex[id] = pokemon;
 
         updateProgressbar();
         hideProgressbar();
     }
 }
+
+/**
+ * Updates the progress bar to reflect the current loading progress.
+ *
+ * @description This function calculates the loading progress by calling `calcProgress` with the total loaded Pokémon and the full limit of the Pokedex. It then updates the width of the progress bar with the calculated percentage.
+ */
 function updateProgressbar() {
     totalLoadedPokemons = fullPokedex.length;
     document.getElementById("full-progress-bar").style.width =
         calcProgress(totalLoadedPokemons, fullPokedexLimit) + "%";
 }
 
+/**
+ * Hides the progress bar when the loading process reaches 100%.
+ *
+ * @description This function checks the current progress using `calcProgress`, comparing it to the full limit. If the progress reaches 100%, it hides the progress bar by adding the `d-none` class to the `progress-bar-container` element.
+ */
 function hideProgressbar() {
     if (calcProgress(totalLoadedPokemons, fullPokedexLimit) == 100) {
         document
@@ -183,9 +205,9 @@ function displayAllPokemons(pokemons) {
  * @description This function fetches the content container by its ID and appends a
  * Pokémon card by calling the `renderPkmCard` function with the given Pokémon index.
  */
-function createPokemonCard(pokemon) {
+function createPokemonCard(pokemonIndex) {
     let contentRef = document.getElementById("content");
-    contentRef.innerHTML += renderPkmCard(pokemon.id);
+    contentRef.innerHTML += renderPkmCard(pokemonIndex);
 }
 
 /**
@@ -214,16 +236,17 @@ function loadPokemons() {
  * Displays detailed information about a Pokémon.
  *
  * @function displayPokemonDetails
+ * @param {number} pokemonIndex - The index of the Pokémon in the list.
  * @param {Object} pokemon - The Pokémon object containing all necessary details.
  * @description This function updates the Pokémon card's background color based on its primary type,
  * displays its name and ID, renders its image, and shows its type(s). It also handles cases where
  * a Pokémon has only one type by hiding the secondary type image.
  */
-function displayPokemonDetails(pokemon) {
+function displayPokemonDetails(pokemonIndex, pokemon) {
     updateBgColor(pokemon, `pokemon-card-${pokemon.id}`);
     displayNameAndId(pokemon);
     displayImg(pokemon);
-    displayType(pokemon.id, pokemon);
+    displayType(pokemonIndex, pokemon);
 }
 
 /**
